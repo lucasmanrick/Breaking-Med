@@ -12,8 +12,7 @@ const connection = async () => {
         database: 'clinica',
         user: 'root',
         password: '1234',
-        multipleStatements:true 
-      
+        multipleStatements:true
     });
     console.log("Conectou no MySQL!");
     global.connection = con;
