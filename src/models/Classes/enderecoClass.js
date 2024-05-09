@@ -1,10 +1,4 @@
 class Endereco{
-    logradouro;
-    bairro;
-    estado;
-    numero;
-    complemento;
-    cep;
     constructor(logradouroEndereco, bairroEndereco, estadoEndereco, numeroEndereco, complementoEndereco, cepEndereco ){
         this.logradouro = logradouroEndereco;
         this.bairro = bairroEndereco;
@@ -13,4 +7,8 @@ class Endereco{
         this.complemento = complementoEndereco;
         this.cep = cepEndereco;
     }
+
+    
 }
+
+module.exports = {Endereco};
