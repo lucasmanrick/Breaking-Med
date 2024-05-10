@@ -1,9 +1,9 @@
 const express = require("express");
-const filmeRoute = require('./src/routes/filmeRoute');
+const router = require('./src/routes/routesapp')
 const expressLayouts = require('express-ejs-layouts');
 
 const app = express();
-const port= 3000;
+const port= 5500;
 
 // BodyParser
 const bodyParser = require('body-parser');
@@ -22,7 +22,7 @@ app.use(express.json());
 
 app.use(express.static(`${__dirname}/public`))
 
-app.use('/', filmeRoute);
+app.use('/', router);
 
 // INICIA O SERVIDOR NA PORTA INFORMADA
 app.listen(port, () => {

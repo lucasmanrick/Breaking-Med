@@ -10,7 +10,6 @@ class Endereco{
   }
 }
 
- 
 
 module.exports = {Endereco};
 
