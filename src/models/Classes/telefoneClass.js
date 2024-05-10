@@ -5,4 +5,4 @@ class Telefone{
     }
 }
 
-module.exports = {Telefone}
+module.exports = Telefone

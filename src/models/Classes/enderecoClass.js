@@ -1,15 +1,20 @@
 class Endereco{
-  constructor(id='', logradouroEndereco='', bairroEndereco='', estadoEndereco='', numeroEndereco='', complementoEndereco='', cepEndereco='' ){
-    this.id = id;
-      this.logradouroEndereco = logradouroEndereco;
-      this.bairroEndereco = bairroEndereco;
-      this.estadoEndereco = estadoEndereco;
-      this.numeroEndereco = numeroEndereco;
-      this.complementoEndereco = complementoEndereco;
-      this.cepEndereco = cepEndereco;
+
+  logradouro;
+  bairro;
+  estado;
+  numero;
+  complemento;
+  cep;
+  constructor(id,logradouroEndereco, bairroEndereco, estadoEndereco, numeroEndereco, complementoEndereco, cepEndereco ){
+      this.id = id;
+      this.logradouro = logradouroEndereco;
+      this.bairro = bairroEndereco;
+      this.estado = estadoEndereco;
+      this.numero = numeroEndereco;
+      this.complemento = complementoEndereco;
+      this.cep = cepEndereco;
   }
 }
 
-
-module.exports = {Endereco};
-
+module.exports = Endereco

@@ -5,4 +5,4 @@ class Especialidade{
     }
 }
 
-module.exports={Especialidade}
+module.exports=Especialidade
