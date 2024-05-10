@@ -1,10 +1,5 @@
 class Login{
 
-  constructor(id,login,) {
-
-  }
-}
-
     constructor(loginPessoa, senhaPessoa, statusPessoa, pessoaId, enderecoId){
         this.loginPessoa = loginPessoa;
         this.senhaPessoa = senhaPessoa;

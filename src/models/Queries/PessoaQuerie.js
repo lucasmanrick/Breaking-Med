@@ -32,3 +32,5 @@ const QuerysPessoa = {
     }
   }
 }
+
+module.exports = QuerysPessoa
