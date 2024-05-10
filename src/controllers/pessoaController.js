@@ -12,10 +12,13 @@ const controllers = {
     try{
       const {nome,cpf,genero,dataNasc,email,dataCad,logradouro,bairro,estado,numero,complemento,cep,telefones,login,senha,personPerfil,crm} = req.body;
     
-      const personObj = new Pessoa (null)  
+      const personObj = new Pessoa (null,)  
     }catch (e) {
       console.log(e)
     }
   }
 
 }
+
+
+module.exports = controllers

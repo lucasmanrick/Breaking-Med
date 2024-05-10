@@ -7,4 +7,4 @@ class Perfis{
     }
 }
 
-module.exports = {Perfis}
+module.exports = Perfis
