@@ -27,14 +27,15 @@ const QuerysPessoa = {
 
       const recebeIdsTelefone = []
       
-      telefoneObj.numero.forEach(async (tel) => {
+      telefoneObj.numero.forEach(async function insertingTel (tel) {
        let tRes = await conn.query (`insert into tbl_telefones (numero) values ('${tel.numero}}')`)
         recebeIdsTelefone.push(tRes[0].insertId)
       })
         
+      const returnAll = Promise.all(insertingTel)
 
       recebeIdsTelefone.forEach(async (el) => {
-        await conn.query (`insert into tbl_pessoa_has_tbl_telefone (pessoa_id,telefone_id,pessoa_tbl_endereco_id) values ('?','?','?')`,[])
+        await conn.query (`insert into tbl_pessoa_has_tbl_telefone (pessoa_id,telefone_id,pessoa_tbl_endereco_id) values ('?','?','?')`,[pRes[0].insertId,el,eRes[0].insertId])
       })
 
         return rows;
