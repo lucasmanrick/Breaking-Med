@@ -9,4 +9,4 @@ class Funcionario{
 }
 
 
-module.exports={Funcionario}
+module.exports=Funcionario

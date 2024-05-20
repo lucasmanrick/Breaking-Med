@@ -11,4 +11,4 @@ class Consulta{
     }
 }
 
-module.exports = {Consulta}
+module.exports = Consulta

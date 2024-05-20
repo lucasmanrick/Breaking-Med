@@ -1,5 +1,6 @@
 class Login{
-    constructor(id='', loginPessoa='', senhaPessoa='', statusPessoa=0, pessoaId=0, enderecoId=0){
+
+    constructor(id='',loginPessoa, senhaPessoa, statusPessoa, pessoaId='', enderecoId=''){
         this.id = id;
         this.loginPessoa = loginPessoa;
         this.senhaPessoa = senhaPessoa;
@@ -7,10 +8,9 @@ class Login{
         this.pessoaId = pessoaId;
         this.enderecoId = enderecoId;
     }
-  
-}
+
     
+}
 
-
-module.exports = {Login};
+module.exports = Login
 

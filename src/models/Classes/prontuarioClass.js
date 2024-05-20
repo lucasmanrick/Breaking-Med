@@ -8,8 +8,8 @@ class Prontuario{
         this.consultaPacienteId = consultaPacienteId;
         this.consultaPacientePessoaId = consultaPacientePessoaId;
         this.consultaFuncionarioId = consultaFuncionarioId;
-        this.consultaFuncionarioId = consultaFuncionarioPessoaId;
+        this.consultaFuncionarioPessoaId = consultaFuncionarioPessoaId;
     }
 }
 
-module.exports={Prontuario}
+module.exports=Prontuario
