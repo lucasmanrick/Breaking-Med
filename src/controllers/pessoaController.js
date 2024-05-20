@@ -5,8 +5,8 @@ const Consulta = require ('../models/Classes/consultaClass')
 const {novoRegistroPessoa} = require('../models/Queries/PessoaQuerie');
 const Login = require('../models/Classes/loginClass');
 const Telefone = require('../models/Classes/telefoneClass');
-
-
+const Funcionario = require('../models/Classes/funcionarioClass');
+const Paciente = require('../models/Classes/pacienteClass');
 
 const controllers = {
   registroDeCliente: async (req,res) => {
@@ -32,8 +32,17 @@ const controllers = {
       const telefoneObj = new Telefone (null,...telefones)
       
       const perfilObj = new Perfis (null,personPerfil)
+       
+      const pacienteObj = new Paciente (null,)
 
-      novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj)
+      let funcionarioObj = ''
+      if(req.body.dataAdmissao) {
+        funcionarioObj = new Funcionario (null,req.body.dataAdmissao,req.body.crm)
+      }
+
+     
+
+      novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj,pacienteObj,funcionarioObj == '' ? null : funcionarioObj)
     }catch (e) {
       console.log(e)
     }

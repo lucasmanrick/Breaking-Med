@@ -4,3 +4,5 @@ class Paciente{
         this.pessoaId = pessoaId;
     }
 }
+
+module.exports = Paciente
