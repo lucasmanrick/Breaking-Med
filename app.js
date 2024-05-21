@@ -3,7 +3,7 @@ const router = require('./src/routes/routesapp')
 const expressLayouts = require('express-ejs-layouts');
 
 const app = express();
-const port= 5500;
+const port= 5000;
 
 // BodyParser
 const bodyParser = require('body-parser');
