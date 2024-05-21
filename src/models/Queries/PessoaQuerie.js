@@ -69,7 +69,6 @@ const QuerysPessoa = {
     try {
      let res = await conn.query(`select * from tbl_especialidade`)
      console.log(res)
-      console.log(res[0][0])
 
      return res
     } 
