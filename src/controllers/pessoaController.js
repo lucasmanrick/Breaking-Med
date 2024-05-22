@@ -2,7 +2,7 @@ const Pessoa = require('../models/Classes/PessoaClass');
 const Endereco = require('../models/Classes/enderecoClass')
 const Perfis = require ('../models/Classes/perfisClass')
 const Consulta = require ('../models/Classes/consultaClass')
-const {novoRegistroPessoa} = require('../models/Queries/PessoaQuerie');
+const {novoRegistroPessoa, pegaTodosEnderecos, pegaTodosPerfis} = require('../models/Queries/PessoaQuerie');
 const {pegaTodasEspecialidades} = require('../models/Queries/PessoaQuerie')
 const Login = require('../models/Classes/loginClass');
 const Telefone = require('../models/Classes/telefoneClass');
@@ -10,13 +10,19 @@ const Funcionario = require('../models/Classes/funcionarioClass');
 const Paciente = require('../models/Classes/pacienteClass');
 const Especialidade = require('../models/Classes/especialidadeClass');
 
+
+
+/*
+ 
+*/ 
+
 const controllers = {
   registroDeCliente: async (req,res) => {
     try{
       // dados da tabela pessoa
-      const {nome,cpf,genero,dataNasc,email,dataCad} = req.body;
+      const {nome,cpf,genero,dataNasc,email} = req.body;
       // dados da tabela endereco
-      const {logradouro,bairro,estado,numero,complemento,cep} = req.body;
+      const {idEndereco,logradouro,bairro,estado,numero,complemento,cep} = req.body;
       // dados da tabela telefones
       const {telefones} = req.body;
       // tipo da tabela perfil
@@ -24,10 +30,18 @@ const controllers = {
       // dados da tabela funcionario
       const {dataAdmissao,crm} = req.body;
       //dados para tabela especialidade
-      const {descEspecialidade} = req.body;
+      const {idDesc,descEspecialidade} = req.body;
+
+      const date = new Date();
+
+      console.log(date)
     
-      const personObj = new Pessoa (null,nome,cpf,dataNasc,genero,email,dataCad)
-      const enderecoObj = new Endereco (null,logradouro,bairro,estado,numero,complemento,cep)
+      const personObj = new Pessoa (null,nome,cpf,dataNasc,genero,email,date)
+
+    
+      const enderecoObj = new Endereco (idEndereco?idEndereco:null,logradouro,bairro,estado,numero,complemento,cep)
+      
+      
 
       function randomizaSenha () {
         let passReceive = ''
@@ -39,9 +53,9 @@ const controllers = {
         return passReceive
       }
       
-      const loginObj = new Login (null,cpf,randomizaSenha(),'ativo') 
+      const loginObj = new Login (null,cpf,randomizaSenha(),0) 
 
-      const telefoneObj = new Telefone (null,...telefones)
+      const telefoneObj = new Telefone (null,telefones)
       
       const perfilObj = new Perfis (null,personPerfil)
        
@@ -50,22 +64,24 @@ const controllers = {
       let especialidadeObj = ''
       if(req.body.dataAdmissao && req.body.descEspecialidade) {
         funcionarioObj = new Funcionario (null,dataAdmissao,crm? crm:null );
-        especialidadeObj = new Especialidade (null,descEspecialidade);
+        especialidadeObj = new Especialidade (idDesc,descEspecialidade);
       }
 
-     
-      novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj,funcionarioObj === '' ? null : funcionarioObj, especialidadeObj == '' ? null : especialidadeObj)
-    }catch (e) {
+        await novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj,funcionarioObj === '' ? null : funcionarioObj, especialidadeObj == '' ? null : especialidadeObj)
+    
+      res.json()
+      }catch (e) {
       console.log(e)
     }
   },
 
-  pegaEspecialidades: async (req,res) => {
-    const especialidades = new Especialidade()
-    let testandoReturn = pegaTodasEspecialidades()
-    console.log('testando Return especialidade' )
-    console.log(testandoReturn)
+  pegaDadosParaRegistro: async (req,res) => {
+    let retornaEspecialidades = await pegaTodasEspecialidades();  //retorna um array com todas as especialidades existentes
+    let retornaEndereco = await pegaTodosEnderecos();
+    let retornaPerfis = await pegaTodosPerfis();
+    res.json ({especialidades:retornaEspecialidades,endereco:retornaEndereco})
   }
+
 
 }
 

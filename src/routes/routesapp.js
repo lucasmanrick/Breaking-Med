@@ -6,6 +6,6 @@ const controllers = require('../controllers/pessoaController')
 
 // router.get('/Registros', controllers.)
 router.post('/RegistroCliente', controllers.registroDeCliente)
-router.get('/Especialidade', controllers.pegaEspecialidades)
+router.get('/RegistroCliente', controllers.pegaDadosParaRegistro)
 
 module.exports = router;

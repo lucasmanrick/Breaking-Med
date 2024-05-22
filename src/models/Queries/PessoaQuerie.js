@@ -13,69 +13,124 @@ const QuerysPessoa = {
       throw error;
     }
   },
-  async novoRegistroPessoa (pessoaObj,enderecoObj,telefoneObj,loginObj,perfisObj,pacienteObj,funcionarioObj, especialidadeObj) {
+  async novoRegistroPessoa (pessoaObj,enderecoObj,telefoneObj,loginObj,perfisObj,funcionarioObj, especialidadeObj) {
     const conn = await connection(); 
     try {
     
       await conn.beginTransaction();
       
-     const eRes = await conn.query(`insert into tbl_endereco (logradouro,bairro,estado,numero,complemento,cep) VALUES (?, ?, ?, ?, ?, ?)`,[enderecoObj.logradouro,enderecoObj.bairro,enderecoObj.estado,enderecoObj.numero,enderecoObj.complemento,])
+      let eRes;
 
-     const pRes = await conn.query(`insert into tbl_pessoa (nome,cpf,data_nasc,genero,email,data_cad,endereco_id) values (?,?, ?,?,?,?,?)`,[pessoaObj.nome,pessoaObj.cpf,pessoaObj.dataNasc,pessoaObj.genero,pessoaObj.email,pessoaObj.dataDeCadastro,eRes[0].insertId])
+      if(enderecoObj.id !== '') { //verifica se o endereço que o cliente inseriu ja existe no banco de dados, caso não exista ele cria um endereço com aqueles dados 
+        eRes = enderecoObj.id
+      } else{
+        eRes = await conn.query(`insert into tbl_endereco (logradouro,bairro,estado,numero,complemento,cep) VALUES (?, ?, ?, ?, ?, ?)`,[enderecoObj.logradouro,enderecoObj.bairro,enderecoObj.estado,enderecoObj.numero,enderecoObj.complemento])
+        eRes[0].insertId
+      }
+      
+
+     const pRes = await conn.query(`insert into tbl_pessoa (nome,cpf,data_nasc,genero,email,data_cad,endereco_id) values (?,?, ?,?,?,?,?)`,[pessoaObj.nome,pessoaObj.cpf,pessoaObj.dataNasc,pessoaObj.genero,pessoaObj.email,pessoaObj.dataDeCadastro,eRes])
         
-     const lRes =  await conn.query (`insert into tbl_login (login,senha,status,pessoa_id,pessoa_endereco_id) values (?,?,?,?,?)`, [loginObj.loginPessoa,loginObj.senhaPessoa,loginObj.statusPessoa,pRes[0].insertId,eRes[0].insertId])
+     const lRes =  await conn.query (`insert into tbl_login (login,senha,status,pessoa_id,pessoa_endereco_id) values (?,?,?,?,?)`, [loginObj.loginPessoa,loginObj.senhaPessoa,loginObj.statusPessoa,pRes[0].insertId,eRes])
 
-     const perfisRes = await conn.query (`insert into tbl_perfis (tipo,login_id,login_pessoa_id,login_pessoa_endereco_id) values (?,?,?,?)`,[perfisObj.tipoPerfil,lRes[0].insertId,pRes[0].insertId,eRes[0].insertId])
+     const perfisRes = await conn.query (`insert into tbl_perfis (tipo,login_id,login_pessoa_id,login_pessoa_endereco_id) values (?,?,?,?)`,[perfisObj.tipoPerfil,lRes[0].insertId,pRes[0].insertId,eRes])
 
       
-      telefoneObj.forEach(async function insertingTel (tel) {
-       let tRes = await conn.query (`insert into tbl_telefones (numero) values (?)`,[tel])
-        await conn.query (`insert into tbl_pessoa_has_tbl_telefone (pessoa_id,telefone_id,pessoa_tbl_endereco_id) values (?,?,?)`,[pRes[0].insertId,tRes[0].insertId,eRes[0].insertId])
+      telefoneObj.numero.forEach(async (tel) => {
+       let tRes = await conn.query (`insert into tbl_telefone (numero) values (?)`,[tel])
+       await conn.query (`insert into tbl_pessoa_has_tbl_telefone (pessoa_id,telefone_id,pessoa_tbl_endereco_id) values (?,?,?)`,[pRes[0].insertId,tRes[0].insertId,eRes])
       })
 
 
       let pacienteRes = await conn.query (`insert into tbl_paciente (pessoa_id) values (?)`, [pRes[0].insertId])
 
-      
-     
+      console.log(funcionarioObj)
+
+     console.log(funcionarioObj.dataAdmissao)
 
       if(funcionarioObj !== null && especialidadeObj !== null ) {
-        let fRes = await conn.query (`insert into tbl_funcionario (data_admissao, crm, pessoa_id, pessoa_endereco_id) Values (?,?,?,?)`,[funcionarioObj.dataAdmissao,funcionarioObj.crm,funcionar,pRes[0].insertId, eRes[0].insertId])
+        let fRes = await conn.query (`insert into tbl_funcionario (data_admissao, crm, pessoa_id, pessoa_endereco_id) Values (?,?,?,?)`,[funcionarioObj.dataAdmissao,funcionarioObj.crm,pRes[0].insertId, eRes])
           if(funcionarioObj.crm === null) {
             return
           }
-        await conn.query (`insert into tbl_funcionario_has_tbl_especialidade (funcionario_id,funcionario_pessoa_id,funcionario_pessoa_endereco_id,especialidade_id) values (?,?,?,?)`, [fRes[0].insertId,pRes[0].insertId,eRes[0].insertId,especialidadeRes[0].insertId])
+        await conn.query (`insert into tbl_funcionario_has_tbl_especialidade (funcionario_id,funcionario_pessoa_id,funcionario_pessoa_endereco_id,especialidade_id) values (?,?,?,?)`, [fRes[0].insertId,pRes[0].insertId,eRes,especialidadeObj.id])
       }
 
 
 
       await conn.commit();
-      console.log('transação concluida com sucesso')
+      console.log('cliente cadastrado com sucesso')
         
-        return rows;
+      return ({"cadastro": "usuario registrado com sucesso!!"})
         
       
     } catch (error) {
       await conn.rollback();
-      console.log('houve algum problema durante o registro do funcionario.')
-
-      throw error;
+      return ({"cadastro": "usuario não foi registrado!!"})
+      
+      
     }
   },
+
+
+
+  //trabalhando com a tabela especialidades.
 
   async pegaTodasEspecialidades () {
     const conn = await connection();
 
     try {
      let res = await conn.query(`select * from tbl_especialidade`)
-     console.log(res)
 
-     return res
+    console.log(res[0])
+     return res[0]
+    } 
+    catch (e) {
+      console.log (e)
+    }
+  },
+
+  // async pegaEspecialidadePeloId (id) {
+  //   const conn = await connection();
+
+  //   try {
+  //    let res = await conn.query(`select * from tbl_especialidade where id = ?`,[id])
+
+  //    return res[0][0]
+  //   } 
+  //   catch (e) {
+  //     console.log (e)
+  //   }
+  // },
+
+  async pegaTodosEnderecos () {
+
+    const conn = await connection();
+
+    try {
+     let res = await conn.query(`select * from tbl_endereco`)
+
+     return res[0]
+    } 
+    catch (e) {
+      console.log (e)
+    }
+    
+  },
+
+  async pegaTodosPerfis () {
+    const conn = await connection();
+
+    try {
+     let res = await conn.query(`select * from tbl_perfis`)
+
+     return res[0]
     } 
     catch (e) {
       console.log (e)
     }
   }
+
 }
 
 module.exports = QuerysPessoa
