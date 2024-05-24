@@ -17,7 +17,7 @@ const Especialidade = require('../models/Classes/especialidadeClass');
 */ 
 
 const controllers = {
-  registroDeCliente: async (req,res) => {
+  registroDeUsuario: async (req,res) => {
     try{
       // dados da tabela pessoa
       const {nome,cpf,genero,dataNasc,email} = req.body;
@@ -67,9 +67,10 @@ const controllers = {
         especialidadeObj = new Especialidade (idDesc,descEspecialidade);
       }
 
-        await novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj,funcionarioObj === '' ? null : funcionarioObj, especialidadeObj == '' ? null : especialidadeObj)
+       const retornaSucessFailure = await novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj,funcionarioObj === '' ? null : funcionarioObj, especialidadeObj == '' ? null : especialidadeObj)
     
-      res.json()
+
+      res.render('', {registrouUsuario:retornaSucessFailure} )
       }catch (e) {
       console.log(e)
     }

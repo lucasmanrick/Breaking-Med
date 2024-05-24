@@ -37,6 +37,18 @@ const QuerysPessoa = {
 
       
       telefoneObj.numero.forEach(async (tel) => {
+        if(tel.length !== 11 || tel.length !== 10) {
+          return
+        }
+  
+
+      const hasTel =  await conn.query(`select * from tbl_telefone WHERE numero = ?`, [tel])
+
+      if(hasTel[0][0].length != 0) { //caso ja tenha um dos telefones registrado não registra de novo, só vincula o novo registro de cliente ao telefone ja existente.
+        await conn.query (`insert into tbl_pessoa_has_tbl_telefone (pessoa_id,telefone_id,pessoa_tbl_endereco_id) values (?,?,?)`,[pRes[0].insertId,hasTel[0][0].id,eRes])
+        return
+      }
+
        let tRes = await conn.query (`insert into tbl_telefone (numero) values (?)`,[tel])
        await conn.query (`insert into tbl_pessoa_has_tbl_telefone (pessoa_id,telefone_id,pessoa_tbl_endereco_id) values (?,?,?)`,[pRes[0].insertId,tRes[0].insertId,eRes])
       })
@@ -61,12 +73,13 @@ const QuerysPessoa = {
       await conn.commit();
       console.log('cliente cadastrado com sucesso')
         
-      return ({"cadastro": "usuario registrado com sucesso!!"})
+      return ({cadastro: "usuario registrado com sucesso!!"})
         
       
     } catch (error) {
       await conn.rollback();
-      return ({"cadastro": "usuario não foi registrado!!"})
+      console.log(error)
+      return ({cadastro: "usuario não foi registrado!!"})
       
       
     }
