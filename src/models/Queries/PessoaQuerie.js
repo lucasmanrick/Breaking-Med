@@ -71,15 +71,14 @@ const QuerysPessoa = {
 
 
       await conn.commit();
-      console.log('cliente cadastrado com sucesso')
         
-      return ({cadastro: "usuario registrado com sucesso!!"})
+      return ({cadastroMessage: "usuario registrado com sucesso!!",result:true})
         
       
     } catch (error) {
       await conn.rollback();
-      console.log(error)
-      return ({cadastro: "usuario não foi registrado!!"})
+    
+      return ({cadastroMessage: `usuario não foi registrado devido ao erro: ${error}`,result:false})
       
       
     }

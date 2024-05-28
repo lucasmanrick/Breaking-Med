@@ -8,9 +8,8 @@ class Pessoa {
     this.dataNasc = dataNasc,
     this.genero = genero,
     this.email = email,
-    this.dataDeCadastro = dataDeCadastro
+    this.dataDeCadastro = dataDeCadastro,
     this.enderecoId = enderecoId
-
   }
 
 }

@@ -17,7 +17,7 @@ const Especialidade = require('../models/Classes/especialidadeClass');
 */ 
 
 const controllers = {
-  registroDeUsuario: async (req,res) => {
+  registroDeUsuario: async (req,res) => { //create usuario que só funciona se o usuario que estiver registrando for adm
     try{
       // dados da tabela pessoa
       const {nome,cpf,genero,dataNasc,email} = req.body;
@@ -29,8 +29,15 @@ const controllers = {
       const {personPerfil} = req.body;
       // dados da tabela funcionario
       const {dataAdmissao,crm} = req.body;
-      //dados para tabela especialidade
+      // dados para tabela especialidade
       const {idDesc,descEspecialidade} = req.body;
+      // dados para confirmar se é adm.
+      const {perfilRegister} = req.body;
+
+      if(perfilRegister !== 'administrador') {
+        res.json({cadastroMessage: "você só pode registrar um cliente caso você seja um administrador!",result:false})
+        return
+      }
 
       const date = new Date();
 
@@ -70,7 +77,7 @@ const controllers = {
        const retornaSucessFailure = await novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj,funcionarioObj === '' ? null : funcionarioObj, especialidadeObj == '' ? null : especialidadeObj)
     
 
-      res.render('', {registrouUsuario:retornaSucessFailure} )
+      res.json( retornaSucessFailure )
       }catch (e) {
       console.log(e)
     }
@@ -80,7 +87,7 @@ const controllers = {
     let retornaEspecialidades = await pegaTodasEspecialidades();  //retorna um array com todas as especialidades existentes
     let retornaEndereco = await pegaTodosEnderecos();
     let retornaPerfis = await pegaTodosPerfis();
-    res.json ({especialidades:retornaEspecialidades,endereco:retornaEndereco})
+    res.json ({especialidades:retornaEspecialidades,endereco:retornaEndereco, perfis:retornaPerfis})
   }
 
 
