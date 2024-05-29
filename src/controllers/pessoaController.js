@@ -79,7 +79,7 @@ const controllers = {
 
       res.json( retornaSucessFailure )
       }catch (e) {
-      console.log(e)
+        res.json({cadastroMessage: `usuario não foi registrado, motivo: ${e}`,result:false})
     }
   },
 
