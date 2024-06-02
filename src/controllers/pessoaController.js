@@ -2,7 +2,7 @@ const Pessoa = require('../models/Classes/PessoaClass');
 const Endereco = require('../models/Classes/enderecoClass')
 const Perfis = require ('../models/Classes/perfisClass')
 const Consulta = require ('../models/Classes/consultaClass')
-const {novoRegistroPessoa, pegaTodosEnderecos, pegaTodosPerfis} = require('../models/Queries/PessoaQuerie');
+const {novoRegistroPessoa} = require('../models/Queries/PessoaQuerie');
 const {pegaTodasEspecialidades} = require('../models/Queries/PessoaQuerie')
 const Login = require('../models/Classes/loginClass');
 const Telefone = require('../models/Classes/telefoneClass');
@@ -30,7 +30,7 @@ const controllers = {
       // dados da tabela funcionario
       const {dataAdmissao,crm} = req.body;
       // dados para tabela especialidade
-      const {idDesc,descEspecialidade} = req.body;
+      const {idEspec,descEspecialidade} = req.body;
       // dados para confirmar se é adm.
       const {perfilRegister} = req.body;
 
@@ -69,9 +69,9 @@ const controllers = {
 
       let funcionarioObj = ''
       let especialidadeObj = ''
-      if(req.body.dataAdmissao && req.body.descEspecialidade) {
+      if(dataAdmissao && descEspecialidade) {
         funcionarioObj = new Funcionario (null,dataAdmissao,crm? crm:null );
-        especialidadeObj = new Especialidade (idDesc,descEspecialidade);
+        especialidadeObj = new Especialidade (idEspec,descEspecialidade);
       }
 
        const retornaSucessFailure = await novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj,funcionarioObj === '' ? null : funcionarioObj, especialidadeObj == '' ? null : especialidadeObj)
@@ -83,6 +83,9 @@ const controllers = {
     }
   },
 
+  retornaEspecialidades: async (req,res) => {
+    pegaTodasEspecialidades()
+  }
 
 }
 

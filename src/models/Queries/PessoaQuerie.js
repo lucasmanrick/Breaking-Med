@@ -92,7 +92,12 @@ const QuerysPessoa = {
     }
   },
 
+  async selecionaTodasEspecialidades () {
+    const conn = await connection();
+    let results = await conn.query()
 
+    
+  }
 
 
 }
