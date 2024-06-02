@@ -16,7 +16,7 @@ const Especialidade = require('../models/Classes/especialidadeClass');
  
 */ 
 
-const controllers = {
+const pessoaControllers = {
   registroDeUsuario: async (req,res) => { //create usuario que só funciona se o usuario que estiver registrando for adm
     try{
       // dados da tabela pessoa
@@ -31,13 +31,7 @@ const controllers = {
       const {dataAdmissao,crm} = req.body;
       // dados para tabela especialidade
       const {idEspec,descEspecialidade} = req.body;
-      // dados para confirmar se é adm.
-      const {perfilRegister} = req.body;
-
-      if(perfilRegister !== 'administrador') {
-        res.json({cadastroMessage: "você só pode registrar um cliente caso você seja um administrador!",result:false})
-        return
-      }
+      
 
       const date = new Date();
 
@@ -84,10 +78,11 @@ const controllers = {
   },
 
   retornaEspecialidades: async (req,res) => {
-    pegaTodasEspecialidades()
+    const pegaEspecialidades =  pegaTodasEspecialidades()
+    res.json (pegaEspecialidades)
   }
 
 }
 
 
-module.exports = controllers
+module.exports = pessoaControllers

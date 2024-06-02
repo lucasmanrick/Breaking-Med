@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const controllers = require('../controllers/pessoaController')
-
+const pessoaControllers = require('../controllers/pessoaController')
+const consultaController = require('../controllers/consultaController')
 
 // router.get('/Registros', controllers.)
-router.post('/RegistroCliente', controllers.registroDeUsuario)
-
+router.post('/RegistroCliente', pessoaControllers.registroDeUsuario)
+router.post('/Consulta', consultaController.novaConsulta)
 
 module.exports = router;
