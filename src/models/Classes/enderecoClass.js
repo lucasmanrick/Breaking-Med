@@ -4,9 +4,9 @@ class Endereco{
   bairro;
   estado;
   numero;
-  complemento;
+  complemento; 
   cep;
-  constructor(id='',logradouroEndereco='', bairroEndereco='', estadoEndereco='', numeroEndereco='', complementoEndereco='', cepEndereco='' ){
+  constructor(id=0,logradouroEndereco='', bairroEndereco='', estadoEndereco='', numeroEndereco='', complementoEndereco='', cepEndereco='' ){
       this.id = id;
       this.logradouro = logradouroEndereco;
       this.bairro = bairroEndereco;

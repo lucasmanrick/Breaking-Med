@@ -4,7 +4,7 @@ const Login = require("../Classes/loginClass");
 
 
 const QuerysPessoa = {
- async SelecionarTodosRegistrosDePessoa() {
+  async SelecionarTodosRegistrosDePessoa() {
     try {
       const conn = await connection();
       const [rows] = await conn.query('select * from tbl_pessoa;');
@@ -13,135 +13,87 @@ const QuerysPessoa = {
       throw error;
     }
   },
-  async novoRegistroPessoa (pessoaObj,enderecoObj,telefoneObj,loginObj,perfisObj,funcionarioObj, especialidadeObj) {
-    const conn = await connection(); 
+  async novoRegistroPessoa(pessoaObj, enderecoObj, telefoneObj, loginObj, perfisObj, funcionarioObj, especialidadeObj) {
+    const conn = await connection();
     try {
-    
+
       await conn.beginTransaction();
-      
+
+
+      let confirmaExistenciaRegistro = await conn.query('select id from tbl_pessoa where cpf=? ;', [pessoaObj.cpf])
+      console.log(confirmaExistenciaRegistro)
+      if(confirmaExistenciaRegistro[0].length > 0) {
+        return { cadastroMessage: "usuario ja possui um cadastro", result: false }
+      }
+
+      //confirmação se o endereço do novo usuario ja existe
+
+      let confirmaExistenciaEndereco = await conn.query(`select id from tbl_endereco where cep=? AND numero=?;`, [enderecoObj.cep,enderecoObj.numero])
+
       let eRes;
 
-      if(enderecoObj.id !== '') { //verifica se o endereço que o cliente inseriu ja existe no banco de dados, caso não exista ele cria um endereço com aqueles dados 
-        eRes = enderecoObj.id
-      } else{
-        eRes = await conn.query(`insert into tbl_endereco (logradouro,bairro,estado,numero,complemento,cep) VALUES (?, ?, ?, ?, ?, ?)`,[enderecoObj.logradouro,enderecoObj.bairro,enderecoObj.estado,enderecoObj.numero,enderecoObj.complemento])
-        eRes[0].insertId
-      }
-      
-
-     const pRes = await conn.query(`insert into tbl_pessoa (nome,cpf,data_nasc,genero,email,data_cad,endereco_id) values (?,?, ?,?,?,?,?)`,[pessoaObj.nome,pessoaObj.cpf,pessoaObj.dataNasc,pessoaObj.genero,pessoaObj.email,pessoaObj.dataDeCadastro,eRes])
-        
-     const lRes =  await conn.query (`insert into tbl_login (login,senha,status,pessoa_id,pessoa_endereco_id) values (?,?,?,?,?)`, [loginObj.loginPessoa,loginObj.senhaPessoa,loginObj.statusPessoa,pRes[0].insertId,eRes])
-
-     const perfisRes = await conn.query (`insert into tbl_perfis (tipo,login_id,login_pessoa_id,login_pessoa_endereco_id) values (?,?,?,?)`,[perfisObj.tipoPerfil,lRes[0].insertId,pRes[0].insertId,eRes])
-
-      
-      telefoneObj.numero.forEach(async (tel) => {
-        if(tel.length !== 11 || tel.length !== 10) {
-          return
-        }
-  
-
-      const hasTel =  await conn.query(`select * from tbl_telefone WHERE numero = ?`, [tel])
-
-      if(hasTel[0][0].length != 0) { //caso ja tenha um dos telefones registrado não registra de novo, só vincula o novo registro de cliente ao telefone ja existente.
-        await conn.query (`insert into tbl_pessoa_has_tbl_telefone (pessoa_id,telefone_id,pessoa_tbl_endereco_id) values (?,?,?)`,[pRes[0].insertId,hasTel[0][0].id,eRes])
-        return
+      if(confirmaExistenciaEndereco[0].length > 0) {
+        eRes = confirmaExistenciaEndereco[0][0].id
+      } else {
+        eRes = await conn.query(`insert into tbl_endereco (logradouro,bairro,estado,numero,complemento,cep) VALUES (?,?,?,?,?,?)`, [enderecoObj.logradouro, enderecoObj.bairro, enderecoObj.estado, enderecoObj.numero, enderecoObj.complemento,enderecoObj.cep])
+        eRes = eRes[0].insertId   
       }
 
-       let tRes = await conn.query (`insert into tbl_telefone (numero) values (?)`,[tel])
-       await conn.query (`insert into tbl_pessoa_has_tbl_telefone (pessoa_id,telefone_id,pessoa_tbl_endereco_id) values (?,?,?)`,[pRes[0].insertId,tRes[0].insertId,eRes])
-      })
+      //confirmação se o usuario ja não possui um cadastro.
+
+      const pRes = await conn.query(`insert into tbl_pessoa (nome,cpf,data_nasc,genero,email,data_cad,endereco_id) values (?,?,?,?,?,?,?)`, [pessoaObj.nome,pessoaObj.cpf,pessoaObj.dataNasc,pessoaObj.genero,pessoaObj.email,pessoaObj.dataDeCadastro,eRes])
 
 
-      let pacienteRes = await conn.query (`insert into tbl_paciente (pessoa_id) values (?)`, [pRes[0].insertId])
+      const lRes = await conn.query(`insert into tbl_login (login,senha,status,pessoa_id,pessoa_endereco_id) values (?,?,?,?,?)`, [loginObj.loginPessoa, loginObj.senhaPessoa, loginObj.statusPessoa, pRes[0].insertId,eRes])
 
-      console.log(funcionarioObj)
+      const perfisRes = await conn.query(`insert into tbl_perfis (tipo,login_id,login_pessoa_id,login_pessoa_endereco_id) values (?,?,?,?)`, [perfisObj.tipoPerfil, lRes[0].insertId, pRes[0].insertId,eRes])
 
-     console.log(funcionarioObj.dataAdmissao)
+      if (telefoneObj.numero.length !== 0) {
+        telefoneObj.numero.forEach(async (tel,index) => {
+           let parse = tel.toString()
 
-      if(funcionarioObj !== null && especialidadeObj !== null ) {
-        let fRes = await conn.query (`insert into tbl_funcionario (data_admissao, crm, pessoa_id, pessoa_endereco_id) Values (?,?,?,?)`,[funcionarioObj.dataAdmissao,funcionarioObj.crm,pRes[0].insertId, eRes])
-          if(funcionarioObj.crm === null) {
+          if (parse.length === 10 || parse.length === 11) {
+          const hasTel = await conn.query(`select * from tbl_telefone WHERE numero=?`, [tel])
+          if (hasTel[0].length != 0) { //caso ja tenha um dos telefones registrado não registra de novo, só vincula o novo registro de cliente ao telefone ja existente
+            await conn.query(`insert into tbl_pessoa_has_tbl_telefone (pessoa_id,telefone_id,pessoa_tbl_endereco_id) values (?,?,?)`, [pRes[0].insertId, hasTel[0][0].id,eRes])
             return
           }
-        await conn.query (`insert into tbl_funcionario_has_tbl_especialidade (funcionario_id,funcionario_pessoa_id,funcionario_pessoa_endereco_id,especialidade_id) values (?,?,?,?)`, [fRes[0].insertId,pRes[0].insertId,eRes,especialidadeObj.id])
+          let tRes = await conn.query(`insert into tbl_telefone (numero) values (?)`, [tel])
+          await conn.query(`insert into tbl_pessoa_has_tbl_telefone (pessoa_id,telefone_id,pessoa_tbl_endereco_id) values (?,?,?)`, [pRes[0].insertId, tRes[0].insertId,eRes])
+        }
+        })
+
+      }
+
+
+      let pacienteRes = await conn.query(`insert into tbl_paciente (pessoa_id) values (?)`, [pRes[0].insertId])
+
+      if (funcionarioObj !== null && especialidadeObj !== null) {
+        let fRes = await conn.query(`insert into tbl_funcionario (data_admissao, crm, pessoa_id, pessoa_endereco_id) Values (?,?,?,?)`, [funcionarioObj.dataAdmissao, funcionarioObj.crm, pRes[0].insertId,eRes])
+        if (funcionarioObj.crm === null) {
+          return
+        }
+        await conn.query(`insert into tbl_funcionario_has_tbl_especialidade (funcionario_id,funcionario_pessoa_id,funcionario_pessoa_endereco_id,especialidade_id) values (?,?,?,?)`, [fRes[0].insertId, pRes[0].insertId,eRes, especialidadeObj.id])
       }
 
 
 
       await conn.commit();
-        
-      return ({cadastroMessage: "usuario registrado com sucesso!!",result:true})
-        
-      
+
+      return { cadastroMessage: "usuario registrado com sucesso!!", result: true }
+
+
     } catch (error) {
       await conn.rollback();
-    
-      return ({cadastroMessage: `usuario não foi registrado devido ao erro: ${error}`,result:false})
-      
-      
+
+      return { cadastroMessage: `usuario não foi registrado devido ao erro: ${error}`, result: false }
+
+
     }
   },
 
 
 
-  //trabalhando com a tabela especialidades.
-
-  async pegaTodasEspecialidades () {
-    const conn = await connection();
-
-    try {
-     let res = await conn.query(`select * from tbl_especialidade`)
-
-    console.log(res[0])
-     return res[0]
-    } 
-    catch (e) {
-      console.log (e)
-    }
-  },
-
-  // async pegaEspecialidadePeloId (id) {
-  //   const conn = await connection();
-
-  //   try {
-  //    let res = await conn.query(`select * from tbl_especialidade where id = ?`,[id])
-
-  //    return res[0][0]
-  //   } 
-  //   catch (e) {
-  //     console.log (e)
-  //   }
-  // },
-
-  async pegaTodosEnderecos () {
-
-    const conn = await connection();
-
-    try {
-     let res = await conn.query(`select * from tbl_endereco`)
-
-     return res[0]
-    } 
-    catch (e) {
-      console.log (e)
-    }
-    
-  },
-
-  async pegaTodosPerfis () {
-    const conn = await connection();
-
-    try {
-     let res = await conn.query(`select * from tbl_perfis`)
-
-     return res[0]
-    } 
-    catch (e) {
-      console.log (e)
-    }
-  }
 
 }
 

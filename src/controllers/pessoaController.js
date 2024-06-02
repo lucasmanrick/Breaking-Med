@@ -22,7 +22,7 @@ const controllers = {
       // dados da tabela pessoa
       const {nome,cpf,genero,dataNasc,email} = req.body;
       // dados da tabela endereco
-      const {idEndereco,logradouro,bairro,estado,numero,complemento,cep} = req.body;
+      const {logradouro,bairro,estado,numero,complemento,cep} = req.body;
       // dados da tabela telefones
       const {telefones} = req.body;
       // tipo da tabela perfil
@@ -46,7 +46,7 @@ const controllers = {
       const personObj = new Pessoa (null,nome,cpf,dataNasc,genero,email,date)
 
     
-      const enderecoObj = new Endereco (idEndereco?idEndereco:null,logradouro,bairro,estado,numero,complemento,cep)
+      const enderecoObj = new Endereco (null,logradouro,bairro,estado,numero,complemento,cep)
       
       
 
@@ -82,13 +82,6 @@ const controllers = {
         res.json({cadastroMessage: `usuario não foi registrado, motivo: ${e}`,result:false})
     }
   },
-
-  pegaDadosParaRegistro: async (req,res) => {
-    let retornaEspecialidades = await pegaTodasEspecialidades();  //retorna um array com todas as especialidades existentes
-    let retornaEndereco = await pegaTodosEnderecos();
-    let retornaPerfis = await pegaTodosPerfis();
-    res.json ({especialidades:retornaEspecialidades,endereco:retornaEndereco, perfis:retornaPerfis})
-  }
 
 
 }
