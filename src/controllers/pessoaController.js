@@ -30,7 +30,7 @@ const pessoaControllers = {
       // dados da tabela funcionario
       const {dataAdmissao,crm} = req.body;
       // dados para tabela especialidade
-      const {idEspec,descEspecialidade} = req.body;
+      const {idEspec} = req.body;
       
 
       const date = new Date();
@@ -63,9 +63,9 @@ const pessoaControllers = {
 
       let funcionarioObj = ''
       let especialidadeObj = ''
-      if(dataAdmissao && descEspecialidade) {
+      if(dataAdmissao && idEspec) {
         funcionarioObj = new Funcionario (null,dataAdmissao,crm? crm:null );
-        especialidadeObj = new Especialidade (idEspec,descEspecialidade);
+        especialidadeObj = new Especialidade (idEspec);
       }
 
        const retornaSucessFailure = await novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj,funcionarioObj === '' ? null : funcionarioObj, especialidadeObj == '' ? null : especialidadeObj)
