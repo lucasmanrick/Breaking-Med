@@ -1,7 +1,7 @@
 const { connection } = require(`../../config/db`);
 
 class Pessoa {
-  constructor (id='',nomeDaPessoa='',cpf='',dataNasc='',genero='',email='',dataDeCadastro='',enderecoId=0) {
+  constructor (id=0,nomeDaPessoa='',cpf='',dataNasc='',genero='',email='',dataDeCadastro='',enderecoId=0) {
     this.id = id
     this.nome = nomeDaPessoa,
     this.cpf = cpf,

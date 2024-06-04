@@ -1,5 +1,7 @@
-const Consulta = require('../models/Classes/consultaClass')
+const Pessoa = require('../models/Classes/PessoaClass');
+const Consulta = require('../models/Classes/consultaClass');
 const {registraNovaConsulta} = require('../models/Queries/ConsultaQuerie')
+const {retornaConsultaDeUsuarioLogado} = require('../models/Queries/ConsultaQuerie')
 
 const consultaController = {
 
@@ -17,17 +19,15 @@ const consultaController = {
     }
   },
 
-  consultasPendentes: async (req,res) => {
-    try{
-     let consultaReturn = retornaConsultasAtivas()
-
-    }catch(e) {
-      console.log(e)
-    }
-  },
-
   verificaConsultasPaciente: async (req,res) => {
-    
+    const {idPessoa} = req.params  //o id recebido aki é o do paciente
+    console.log(idPessoa)
+    if(idPessoa) {
+      const recebeConsultas = new Pessoa (idPessoa)
+      res.json(await retornaConsultaDeUsuarioLogado (recebeConsultas))
+    } else {
+      res.json({consultaMessage:'o id do paciente que está solicitando consultas pendentes não foi passado', result:false})
+    }
   }
 }
 

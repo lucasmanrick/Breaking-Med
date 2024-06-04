@@ -36,8 +36,32 @@ const QuerieConsulta = {
       return {consultaMessage: 'não foi possivel registrar consulta tente novamente.', result:false}
     } 
   },
-  async retornaConsultaDeUsuarioLogado () {
-    
+  retornaConsultaDeUsuarioLogado: async (pacienteObj) => {
+    const conn = await connection();
+
+    let returnMessage;
+    try{
+      const pegaConsultasDoUsuario = await conn.query('select * from tbl_consulta where paciente_pessoa_id=? and status=1',[pacienteObj.id]) 
+      
+      if(pegaConsultasDoUsuario[0].length !== 0) {
+        returnMessage = {consultaMessage:'o usuario tem consultas pendentes',result:true}
+        returnMessage.moreInfos = pegaConsultasDoUsuario[0]
+        returnMessage.moreInfos.forEach(async(el,index) => {
+          //idconsulta, nome paciente, diagnostico, medicação, especialidade. para o medico
+          //data, hora, status,nome do medico, nome do paciente e especialidade. para o paciente.
+          el.status = 'ativo'
+          let pegaNomeMedicoEEspecialidade = await conn.query('select p.nome, e.desc_especialidade from tbl_especialidade as e join tbl_funcionario_has_tbl_especialidade as the on the.especialidade_id=e.id join tbl_funcionario as f on the.funcionario_id=f.id join tbl_pessoa as p on p.id=f.pessoa_id where e.id=?',[el.especialidade_id])
+          returnMessage.moreInfos[index].dadosMedico = pegaNomeMedicoEEspecialidade[0]
+        })
+        console.log(returnMessage)
+        return returnMessage
+      }else {
+        return {consultaMessage:'não tem consultas pendentes do usuario requisitante',result:false}
+      } 
+    }
+    catch(e) {
+      console.log(e)
+    }
   }
 }
 

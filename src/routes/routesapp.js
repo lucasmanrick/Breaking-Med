@@ -7,5 +7,6 @@ const consultaController = require('../controllers/consultaController')
 // router.get('/Registros', controllers.)
 router.post('/RegistroCliente', pessoaControllers.registroDeUsuario)
 router.post('/Consulta', consultaController.novaConsulta)
+router.get('/ConsultaPaciente/:idPessoa', consultaController.verificaConsultasPaciente)
 
 module.exports = router;
