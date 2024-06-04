@@ -76,7 +76,7 @@ const QuerysPessoa = {
         if (funcionarioObj.crm === null) {
           return
         }
-        await conn.query(`insert into tbl_funcionario_has_tbl_especialidade (funcionario_id,funcionario_pessoa_id,funcionario_pessoa_endereco_id,especialidade_id) values (?,?,?,?)`, [fRes[0].insertId, pRes[0].insertId,eRes, especialidadeObj.id])
+        const especialidadeRes = await conn.query(`insert into tbl_funcionario_has_tbl_especialidade (funcionario_id,funcionario_pessoa_id,funcionario_pessoa_endereco_id,especialidade_id) values (?,?,?,?)`, [fRes[0].insertId, pRes[0].insertId,eRes, especialidadeObj.id])
       }
 
 

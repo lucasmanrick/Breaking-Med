@@ -36,31 +36,37 @@ const QuerieConsulta = {
       return {consultaMessage: 'não foi possivel registrar consulta tente novamente.', result:false}
     } 
   },
-  retornaConsultaDeUsuarioLogado: async (pacienteObj) => {
-    const conn = await connection();
 
+  retornaConsultaDeUsuarioLogado: async (pessoaObj) => {
+    const conn = await connection();
     let returnMessage;
-    try{
-      const pegaConsultasDoUsuario = await conn.query('select * from tbl_consulta where paciente_pessoa_id=? and status=1',[pacienteObj.id]) 
-      
-      if(pegaConsultasDoUsuario[0].length !== 0) {
-        returnMessage = {consultaMessage:'o usuario tem consultas pendentes',result:true, moreInfos:[]}
-        returnMessage.moreInfos = pegaConsultasDoUsuario[0]
-        returnMessage.moreInfos.forEach(async(el,index) => {
-          //idconsulta, nome paciente, diagnostico, medicação, especialidade. para o medico
-          //data, hora, status,nome do medico, nome do paciente e especialidade. para o paciente.
-          el.status = 'ativo'
-          let pegaNomeMedicoEEspecialidade = await conn.query('select p.nome, e.desc_especialidade from tbl_especialidade as e join tbl_funcionario_has_tbl_especialidade as the on the.especialidade_id=e.id join tbl_funcionario as f on the.funcionario_id=f.id join tbl_pessoa as p on p.id=f.pessoa_id where e.id=?',[el.especialidade_id])
-          returnMessage.moreInfos[index].dadosMedico = pegaNomeMedicoEEspecialidade[0]
-        })
-        console.log(returnMessage)
-        return returnMessage
-      }else {
-        return {consultaMessage:'não tem consultas pendentes do usuario requisitante',result:false}
-      } 
-    }
-    catch(e) {
-      console.log(e)
+    try {
+      const pegaConsultasDoUsuario = await conn.query('select id as idConsulta,data as dataConsulta,hora as horaConsulta,status as statusConsulta,paciente_id,paciente_pessoa_id,funcionario_id,funcionario_pessoa_id,especialidade_id from tbl_consulta where paciente_pessoa_id=? and status=1', [pessoaObj.id]);
+    
+      if (pegaConsultasDoUsuario[0].length !== 0) {
+        returnMessage = { consultaMessage: 'O usuário tem consultas pendentes', result: true };
+        returnMessage.moreInfos = pegaConsultasDoUsuario[0];
+    
+        const promessasConsultas = returnMessage.moreInfos.map(async (el) => {
+          el.status = 'ativo';
+          const pegaNomeMedicoEEspecialidade = await conn.query('select p.nome as nomeDoMedico, e.desc_especialidade as consultaEspecialidade from tbl_especialidade as e join tbl_funcionario_has_tbl_especialidade as the on the.especialidade_id=e.id join tbl_funcionario as f on the.funcionario_id=f.id join tbl_pessoa as p on p.id=f.pessoa_id where e.id=?', [el.especialidade_id]);
+          el.dadosMedico = pegaNomeMedicoEEspecialidade[0][0];
+          el.dadosMedico.funcionario_id = el.funcionario_id
+          el.dadosMedico.funcionario_pessoa_id = el.funcionario_pessoa_id
+          el.dadosMedico.especialidade_id = el.especialidade_id;
+
+          delete el.funcionario_id;
+          delete el.funcionario_pessoa_id;
+          delete el.especialidade_id;
+          return el;
+        });
+    
+        // Aguarda todas as queries serem executdas antes de prosseguir com o returnr message
+        returnMessage.moreInfos = await Promise.all(promessasConsultas);
+        return returnMessage;
+      }
+    } catch (error) {
+      console.error('Erro:', error);
     }
   }
 }
