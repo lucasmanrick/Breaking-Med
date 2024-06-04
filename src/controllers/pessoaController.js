@@ -77,8 +77,12 @@ const pessoaControllers = {
     }
   },
 
-  retornaEspecialidades: async (req,res) => {
-    const pegaEspecialidades =  pegaTodasEspecialidades()
+  especialidadesDisponiveisOuEspecialidadeEspecifica: async (req,res) => {
+    const {idFuncionario} = req.params
+    if(idFuncionario) {
+      const pegaEspecialidades = await pegaEspecialidades()
+    }
+    const pegaEspecialidades = await pegaEspecialidades()
     res.json (pegaEspecialidades)
   }
 

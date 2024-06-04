@@ -4,7 +4,10 @@ const Login = require("../Classes/loginClass");
 
 
 const QuerysPessoa = {
-  async SelecionarTodosRegistrosDePessoa() {
+
+  // QUERYS DE REGISTROS DE PESSOA
+
+  async SelecionarTodosRegistrosDePessoa() { //retorna todos clientes registrados.
     try {
       const conn = await connection();
       const [rows] = await conn.query('select * from tbl_pessoa;');
@@ -92,11 +95,23 @@ const QuerysPessoa = {
     }
   },
 
-  async selecionaTodasEspecialidades () {
-    const conn = await connection();
-    let results = await conn.query()
 
-    
+  // QUERYS DE ESPECIALIDADE\/
+
+  async pegaEspecialidades (idFuncionario=0) {
+    const conn = await connection();
+
+    try {
+      let results;
+      if(idFuncionario !== 0) {
+        results = await conn.query('select e.id e.desc_especialidade from tbl_funcionario_has_tbl_especialidade as the join tbl_especialidade as e on the.especialidade_id=e.id WHERE the.funcionario_id=?',[idFuncionario])
+      }else {
+        results = await conn.query('select * from tbl_especialidade')
+      }
+      return {especialidadeMessage:'retornado todas especialidades', results:true, moreInfos: results[0] }  
+    }catch(e) {
+      console.log(e)
+    }
   }
 
 

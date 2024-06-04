@@ -44,7 +44,7 @@ const QuerieConsulta = {
       const pegaConsultasDoUsuario = await conn.query('select * from tbl_consulta where paciente_pessoa_id=? and status=1',[pacienteObj.id]) 
       
       if(pegaConsultasDoUsuario[0].length !== 0) {
-        returnMessage = {consultaMessage:'o usuario tem consultas pendentes',result:true}
+        returnMessage = {consultaMessage:'o usuario tem consultas pendentes',result:true, moreInfos:[]}
         returnMessage.moreInfos = pegaConsultasDoUsuario[0]
         returnMessage.moreInfos.forEach(async(el,index) => {
           //idconsulta, nome paciente, diagnostico, medicação, especialidade. para o medico
