@@ -92,14 +92,13 @@ const pessoaControllers = {
 
   verificaEntrada: async (req,res) => { //função que realiza o login do usuario
     const {login,senha} = req.body
-
+    console.log(login,senha)
     if(login && senha) {
       const LoginObj = new Login (null,login,senha);
 
       let returnTryLogin = await logandoCliente(LoginObj);
       console.log(returnTryLogin)
       res.json(returnTryLogin)
-      return
     }
 
    else {
