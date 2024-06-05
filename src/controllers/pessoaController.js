@@ -3,7 +3,8 @@ const Endereco = require('../models/Classes/enderecoClass')
 const Perfis = require ('../models/Classes/perfisClass')
 const Consulta = require ('../models/Classes/consultaClass')
 const {novoRegistroPessoa} = require('../models/Queries/PessoaQuerie');
-const {pegaTodasEspecialidades} = require('../models/Queries/PessoaQuerie')
+const {pegaTodasEspecialidadesOuADeUmFuncionario} = require('../models/Queries/PessoaQuerie');
+const {logandoCliente} = require('../models/Queries/PessoaQuerie')
 const Login = require('../models/Classes/loginClass');
 const Telefone = require('../models/Classes/telefoneClass');
 const Funcionario = require('../models/Classes/funcionarioClass');
@@ -34,8 +35,6 @@ const pessoaControllers = {
       
 
       const date = new Date();
-
-      console.log(date)
     
       const personObj = new Pessoa (null,nome,cpf,dataNasc,genero,email,date)
 
@@ -77,13 +76,35 @@ const pessoaControllers = {
     }
   },
 
-  especialidadesDisponiveisOuEspecialidadeEspecifica: async (req,res) => {
+  especialidadesDisponiveisOuEspecialidadeDeUmFuncionario: async (req,res) => {
     const {idFuncionario} = req.params
+    let pegaEspecialidadeOuEspecialidades
     if(idFuncionario) {
-      const pegaEspecialidades = await pegaEspecialidades()
+      pegaEspecialidadeOuEspecialidades = await pegaTodasEspecialidadesOuADeUmFuncionario(idFuncionario)
+      res.json(pegaEspecialidadeOuEspecialidades)
+      return
+    } else {
+      pegaEspecialidadeOuEspecialidades = await pegaTodasEspecialidadesOuADeUmFuncionario()
+      res.json (pegaEspecialidadeOuEspecialidades)
     }
-    const pegaEspecialidades = await pegaEspecialidades()
-    res.json (pegaEspecialidades)
+   
+  },
+
+  verificaEntrada: async (req,res) => { //função que realiza o login do usuario
+    const {login,senha} = req.body
+
+    if(login && senha) {
+      const LoginObj = new Login (null,login,senha);
+
+      let returnTryLogin = await logandoCliente(LoginObj);
+      console.log(returnTryLogin)
+      res.json(returnTryLogin)
+      return
+    }
+
+   else {
+    res.json({loginMessage:'Você não informou login e senha tente novamente', result:false})
+   }
   }
 
 }

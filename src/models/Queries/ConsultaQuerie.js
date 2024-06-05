@@ -26,7 +26,7 @@ const QuerieConsulta = {
         const pacientName = await conn.query('select nome from tbl_pessoa where id=?',[consultaObj.pacientePessoaId])
         const doctorName = await conn.query('select nome from tbl_pessoa where id=?',[consultaObj.funcionarioPessoaId])
         await conn.commit();
-        return {consultaMessage: 'consulta registrada com sucesso', result:true, moreInfos:{data:consultaObj.dataConsulta, hora:consultaObj.horaConsulta, pacientName: pacientName[0][0], doctorName:doctorName[0][0] }}
+        return {consultaMessage: 'consulta registrada com sucesso', result:true, moreInfos:{data:consultaObj.dataConsulta, hora:consultaObj.horaConsulta, pacientName: pacientName[0][0].nome, doctorName:doctorName[0][0].nome }}
       }
 
      
@@ -58,6 +58,8 @@ const QuerieConsulta = {
           delete el.funcionario_id;
           delete el.funcionario_pessoa_id;
           delete el.especialidade_id;
+          delete el.paciente_id;
+          delete el.paciente_pessoa_id;
           return el;
         });
     
@@ -65,9 +67,22 @@ const QuerieConsulta = {
         returnMessage.moreInfos = await Promise.all(promessasConsultas);
         return returnMessage;
       }
-    } catch (error) {
-      console.error('Erro:', error);
+    } catch (e) {
+      console.error('não foi possivel verificar as consultas do usuario, por favor tente novamente erro:', e);
     }
+  },
+
+  cancelaAgendamentoConsulta: async (idConsulta) => {
+    const conn = await connection ();
+
+    const consultaASerCancelada = conn.query('Update tbl_consulta set status=0 WHERE ID=?',[idConsulta])
+
+    if(consultaASerCancelada[0].affectedRows === 1) {
+      return {consultaMessage:`o Agendamento de ID ${idConsulta} foi cancelado`, result:true}
+    }else {
+      return {consultaMessage:`a solicitação foi enviada porem nenhum agendamento foi alterado, por favor tente novamente`, result:false}
+    }
+    
   }
 }
 

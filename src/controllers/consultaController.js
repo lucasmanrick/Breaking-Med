@@ -2,6 +2,7 @@ const Pessoa = require('../models/Classes/PessoaClass');
 const Consulta = require('../models/Classes/consultaClass');
 const {registraNovaConsulta} = require('../models/Queries/ConsultaQuerie')
 const {retornaConsultaDeUsuarioLogado} = require('../models/Queries/ConsultaQuerie')
+const {cancelaAgendamentoConsulta} = require('../models/Queries/ConsultaQuerie')
 
 const consultaController = {
 
@@ -28,6 +29,15 @@ const consultaController = {
     } else {
       res.json({consultaMessage:'o id do paciente que está solicitando consultas pendentes não foi passado', result:false})
     }
+  },
+
+  cancelaConsulta: async (req,res) => {
+    const {idDaConsulta} = req.params;
+    if(!idDaConsulta) {
+      return{consultaMessage:'o id da consulta não chegou corretamente ao servidor, tente novamente!',result:false}
+    } 
+
+   return(await cancelaAgendamentoConsulta(idDaConsulta))
   }
 }
 

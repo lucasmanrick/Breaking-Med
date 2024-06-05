@@ -1,6 +1,8 @@
 const express = require("express");
 const router = require('./src/routes/routesapp')
 const expressLayouts = require('express-ejs-layouts');
+require("dotenv-safe").config();
+
 
 const app = express();
 const port= 5000;

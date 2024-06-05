@@ -1,6 +1,6 @@
 class Login{
 
-    constructor(id='',loginPessoa, senhaPessoa, statusPessoa, pessoaId='', enderecoId=''){
+    constructor(id=0,loginPessoa, senhaPessoa, statusPessoa=1, pessoaId='', enderecoId=''){
         this.id = id;
         this.loginPessoa = loginPessoa;
         this.senhaPessoa = senhaPessoa;
