@@ -103,7 +103,7 @@ const QuerysPessoa = {
 
   // QUERYS DE ESPECIALIDADE\/
 
-   pegaTodasEspecialidadesOuADeUmFuncionario: async (idFuncionario=0) => {
+   retornaDadosFuncionarioEEspecialidade: async (idFuncionario=0) => {
     const conn = await connection();
 
     try {
@@ -116,7 +116,7 @@ const QuerysPessoa = {
         }
         return {especialidadeMessage:'retornado especialidades do funcionario disponiveis.', results:true, moreInfos: results[0]}
       }else {
-        results = await conn.query('select * from tbl_especialidade')
+        results = await conn.query('select f.id as funcionario_id, p.id as funcionario_pessoa_id ,p.nome as nomeFuncionario,e.id as especialidade_id,e.desc_especialidade from tbl_especialidade as e join tbl_funcionario_has_tbl_especialidade as the on the.especialidade_id=e.id join tbl_pessoa as p on p.id=the.funcionario_pessoa_id join tbl_funcionario as f on f.id=the.funcionario_id ')
       }
       return {especialidadeMessage:'retornado todas especialidades disponiveis pra uso.', results:true, moreInfos: results[0] }  
     }catch(e) {
@@ -127,8 +127,10 @@ const QuerysPessoa = {
   logandoCliente: async (loginObj) => {
     const conn = await connection();
     try {
-      const returnLoginQuery = await conn.query('select l.login,l.senha,l.status,perf.tipo, pess.id as pessId, pess.nome as nomeUsuário from tbl_login as l join tbl_perfis as perf on perf.login_id=l.id join tbl_pessoa as pess on pess.id=l.pessoa_id WHERE l.login=? AND l.senha=?',[loginObj.loginPessoa,loginObj.senhaPessoa])
-      console.log(returnLoginQuery)
+      const returnLoginQuery = await conn.query('select l.status,perf.tipo, pess.id as pessId, pess.nome as nomeUsuário from tbl_login as l join tbl_perfis as perf on perf.login_id=l.id join tbl_pessoa as pess on pess.id=l.pessoa_id WHERE l.login=? AND l.senha=?',[loginObj.loginPessoa,loginObj.senhaPessoa])
+      // if(returnLoginQuery[0][0].status == 0) {
+      //   return {loginMessage:'Cadastro não se encontra ativo consulte um administrador para reativa-lo', result:false}
+      // }
       if(returnLoginQuery[0].length === 0) {
         console.log('não retornou nada')
         return {loginMessage:'nenhum cadastro com estas credenciais foi identificado, tente novamente', result:false}
@@ -139,24 +141,18 @@ const QuerysPessoa = {
           const token = jwt.sign({ pessId }, process.env.SECRET, {
             expiresIn: 300 // expires in 5min
           });
-          delete returnLoginQuery[0][0].pessId
+
+
           return {loginMessage:'o cadastro é administrador, tem permissão total', result:true, token:token, moreInfos:returnLoginQuery[0][0]}
         }
         else if(returnLoginQuery[0][0].tipo === 'medico') {
+          console.log(returnLoginQuery[0][0].pessId)
           let pessId = returnLoginQuery[0][0].pessId
-          const token = jwt.sign({ pessId }, process.env.MEDICO, {
-            expiresIn: 300 // expires in 5min
-          });
-          delete returnLoginQuery[0][0].pessId
-          return {loginMessage:'o cadastro é de um MEDICO, tem permissão a verificar suas consultas', result:true, token:token, moreInfos:returnLoginQuery[0][0]}
+          return {loginMessage:'o cadastro é de um MEDICO, tem permissão a verificar suas consultas', result:true, moreInfos:returnLoginQuery[0][0]}
         }
         else if (returnLoginQuery[0][0].tipo === 'paciente') {
           let pessId = returnLoginQuery[0][0].pessId
-          const token = jwt.sign({ pessId }, process.env.PACIENTE, {
-            expiresIn: 300 // expires in 5min
-          });
-          delete returnLoginQuery[0][0].pessId
-          return {loginMessage:'o cadastro é de um paciente, tem permissão a verificar suas consultas', result:true, token:token, moreInfos:returnLoginQuery[0][0]}
+          return {loginMessage:'o cadastro é de um paciente, tem permissão a verificar suas consultas', result:true, moreInfos:returnLoginQuery[0][0]}
         }
       }
     }
