@@ -3,7 +3,7 @@ const Endereco = require('../models/Classes/enderecoClass')
 const Perfis = require ('../models/Classes/perfisClass')
 const Consulta = require ('../models/Classes/consultaClass')
 const {novoRegistroPessoa} = require('../models/Queries/PessoaQuerie');
-const {retornaDadosFuncionarioEEspecialidade} = require('../models/Queries/PessoaQuerie');
+const {retornaEspecialidade} = require('../models/Queries/PessoaQuerie');
 const {logandoCliente} = require('../models/Queries/PessoaQuerie')
 const Login = require('../models/Classes/loginClass');
 const Telefone = require('../models/Classes/telefoneClass');
@@ -77,7 +77,7 @@ const pessoaControllers = {
   },
 
   retornaTodasEspecialidades: async (req,res) => {
-    pegaEspecialidadeOuEspecialidades = await retornaDadosFuncionarioEEspecialidade()
+    pegaEspecialidadeOuEspecialidades = await retornaEspecialidade()
       res.json (pegaEspecialidadeOuEspecialidades)
   },
 

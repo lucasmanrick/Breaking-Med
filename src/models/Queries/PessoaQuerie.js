@@ -6,11 +6,18 @@ const QuerysPessoa = {
 
   // QUERYS DE REGISTROS DE PESSOA
 
-  async SelecionarTodosRegistrosDePessoa() { //retorna todos clientes registrados.
+  async verificaExistenciaDeUmUsuario(cpf) { //retorna todos clientes registrados. não esta sendo utilizado.
     try {
       const conn = await connection();
-      const [rows] = await conn.query('select * from tbl_pessoa;');
-      return rows;
+      console.log(cpf)
+      const result = await conn.query('select p.*, pac.id as pac_id from tbl_pessoa as p join tbl_paciente as pac on pac.pessoa_id=p.id where p.cpf=?;',[cpf]);
+      console.log(result)
+      if(result[0].length === 0) {
+        return {consultaMessage:'o CPF informado não possui um cadastro, por favor tente novamente',result:false}
+      }else {
+        return {consultaMessage:'o CPF informado possui um cadastro no banco de dados',result:true,moreInfos:result[0][0]}
+      }
+
     } catch (error) {
       throw error;
     }
@@ -103,7 +110,7 @@ const QuerysPessoa = {
 
   // QUERYS DE ESPECIALIDADE\/
 
-   retornaDadosFuncionarioEEspecialidade: async (idFuncionario=0) => {
+   retornaEspecialidade: async (idFuncionario=0) => { //essa função pode retornar os dados de todos funcionarios e suas especialidades ou retornar as especialidades de um funcionario especifico caso seja passado id
     const conn = await connection();
 
     try {
@@ -132,7 +139,6 @@ const QuerysPessoa = {
       //   return {loginMessage:'Cadastro não se encontra ativo consulte um administrador para reativa-lo', result:false}
       // }
       if(returnLoginQuery[0].length === 0) {
-        console.log('não retornou nada')
         return {loginMessage:'nenhum cadastro com estas credenciais foi identificado, tente novamente', result:false}
       }else {
         console.log('retornou um registro')
@@ -141,18 +147,15 @@ const QuerysPessoa = {
           const token = jwt.sign({ pessId }, process.env.SECRET, {
             expiresIn: 300 // expires in 5min
           });
-
-
           return {loginMessage:'o cadastro é administrador, tem permissão total', result:true, token:token, moreInfos:returnLoginQuery[0][0]}
         }
         else if(returnLoginQuery[0][0].tipo === 'medico') {
-          console.log(returnLoginQuery[0][0].pessId)
-          let pessId = returnLoginQuery[0][0].pessId
           return {loginMessage:'o cadastro é de um MEDICO, tem permissão a verificar suas consultas', result:true, moreInfos:returnLoginQuery[0][0]}
         }
         else if (returnLoginQuery[0][0].tipo === 'paciente') {
-          let pessId = returnLoginQuery[0][0].pessId
           return {loginMessage:'o cadastro é de um paciente, tem permissão a verificar suas consultas', result:true, moreInfos:returnLoginQuery[0][0]}
+        }else {
+         return {loginMessage:'O cadastro não tem perfil, ou o perfil não é valido por favor valide.', result:false}
         }
       }
     }

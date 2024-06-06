@@ -27,8 +27,10 @@ router.post('/RegistroCliente',verifyJWT ,pessoaControllers.registroDeUsuario) /
 
 
 
-router.post('/Consulta',verifyJWT ,consultaController.novaConsulta) //para o administrador agendar uma nova consulta
-router.put('/Consulta/:idDaConsulta',verifyJWT,consultaController.cancelaConsulta)
+router.get('/DadosParaRegistroConsulta', consultaController.retornaEspecialidadesEFuncionario) //retorna todas especialidades e os funcionarios vinculados a ela.
+router.post('/Consulta' ,consultaController.novaConsulta) //para o administrador agendar uma nova consulta
+router.get('/AdmConsultasRemove', consultaController.retornaTodasConsultas)
+router.put('/Consulta/:idDaConsulta',verifyJWT,consultaController.cancelaConsulta)//para cancelar um agendamento.
 
 
 
