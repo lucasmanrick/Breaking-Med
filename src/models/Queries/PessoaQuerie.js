@@ -123,7 +123,7 @@ const QuerysPessoa = {
         }
         return {especialidadeMessage:'retornado especialidades do funcionario disponiveis.', results:true, moreInfos: results[0]}
       }else {
-        results = await conn.query('select f.id as funcionario_id, p.id as funcionario_pessoa_id ,p.nome as nomeFuncionario,e.id as especialidade_id,e.desc_especialidade from tbl_especialidade as e join tbl_funcionario_has_tbl_especialidade as the on the.especialidade_id=e.id join tbl_pessoa as p on p.id=the.funcionario_pessoa_id join tbl_funcionario as f on f.id=the.funcionario_id ')
+        results = await conn.query('select * from tbl_especialidade ')
       }
       return {especialidadeMessage:'retornado todas especialidades disponiveis pra uso.', results:true, moreInfos: results[0] }  
     }catch(e) {
