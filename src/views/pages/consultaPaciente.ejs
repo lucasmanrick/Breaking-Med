@@ -1,0 +1,134 @@
+<link rel="stylesheet" href="../../../public/css/consultaPaciente.css">
+ <!-- Seção da tabela de dados -->
+ <section class="dados" id="dados">
+    <h1 class="heading"> <span>Tabela de Dados</span> </h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Status</th>
+                <th>Nome do Médico</th>
+                <th>Nome do Paciente</th>
+                <th>Especialidade</th>
+            </tr>
+        </thead>
+        <tbody id="corpo-tabela-dados">
+            <!-- Os dados serão inseridos aqui pelo JavaScript -->
+            <tr>
+                <td>2024-06-01</td>
+                <td>09:30</td>
+                <td>Confirmada</td>
+                <td>Dr. Silva</td>
+                <td>João da Silva</td>
+                <td>Clínico Geral</td>
+            </tr>
+            <tr>
+                <td>2024-06-02</td>
+                <td>11:00</td>
+                <td>Cancelada</td>
+                <td>Dra. Santos</td>
+                <td>Maria Oliveira</td>
+                <td>Dermatologia</td>
+            </tr>
+            <tr>
+                <td>2024-06-03</td>
+                <td>14:45</td>
+                <td>Pendente</td>
+                <td>Dr. Pereira</td>
+                <td>Carlos Souza</td>
+                <td>Ortopedia</td>
+            </tr>
+            <tr>
+                <td>2024-06-04</td>
+                <td>10:15</td>
+                <td>Confirmada</td>
+                <td>Dra. Almeida</td>
+                <td>Ana Costa</td>
+                <td>Ginecologia</td>
+            </tr>
+            <tr>
+                <td>2024-06-05</td>
+                <td>08:00</td>
+                <td>Cancelada</td>
+                <td>Dr. Oliveira</td>
+                <td>Pedro Fernandes</td>
+                <td>Pediatria</td>
+            </tr>
+            <tr>
+                <td>2024-06-06</td>
+                <td>15:20</td>
+                <td>Pendente</td>
+                <td>Dra. Lima</td>
+                <td>Juliana Santos</td>
+                <td>Cardiologia</td>
+            </tr>
+            <tr>
+                <td>2024-06-07</td>
+                <td>13:10</td>
+                <td>Confirmada</td>
+                <td>Dr. Costa</td>
+                <td>Luisa Rodrigues</td>
+                <td>Oftalmologia</td>
+            </tr>
+            <tr>
+                <td>2024-06-08</td>
+                <td>16:40</td>
+                <td>Pendente</td>
+                <td>Dra. Ferreira</td>
+                <td>Fernando Oliveira</td>
+                <td>Neurologia</td>
+            </tr>
+            <tr>
+                <td>2024-06-09</td>
+                <td>12:20</td>
+                <td>Cancelada</td>
+                <td>Dr. Rodrigues</td>
+                <td>Roberto Alves</td>
+                <td>Endocrinologia</td>
+            </tr>
+            <tr>
+                <td>2024-06-10</td>
+                <td>09:00</td>
+                <td>Confirmada</td>
+                <td>Dra. Nunes</td>
+                <td>Sofia Lima</td>
+                <td>Psiquiatria</td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+<!-- Fim da seção da tabela de dados -->
+
+<!-- Inicio da função de enviar informações do formulario CHATGBT que deu a fução não sei se vai funcionar -->
+
+
+<!-- <script>
+    $(document).ready(function () {
+        // Faz uma solicitação AJAX para obter os dados do servidor
+        $.ajax({
+            url: 'seu_servidor_dados.php', // Substitua pelo URL do seu servidor e endpoint para obter os dados
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // Limpa o conteúdo atual da tabela
+                $('#corpo-tabela-dados').empty();
+                // Itera sobre os dados recebidos e os insere na tabela
+                $.each(data, function (index, item) {
+                    var row = $('<tr>');
+                    row.append($('<td>').text(item.data));
+                    row.append($('<td>').text(item.hora));
+                    row.append($('<td>').text(item.status));
+                    row.append($('<td>').text(item.nomeMedico));
+                    row.append($('<td>').text(item.nomePaciente));
+                    row.append($('<td>').text(item.especialidade));
+                    $('#corpo-tabela-dados').append(row);
+                });
+            },
+            error: function () {
+                console.log('Erro ao obter os dados do servidor.');
+            }
+        });
+    });
+</script> -->
