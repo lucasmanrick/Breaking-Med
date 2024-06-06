@@ -1,0 +1,126 @@
+<link rel="stylesheet" href="../../../public/css/consultaMedico.css">
+<!-- Seção da tabela de dados -->
+<section class="dados" id="dados">
+    <h1 class="heading"> <span>Tabela de Dados</span> </h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Consulta ID</th>
+                <th>Nome do Paciente</th>
+                <th>Diagnóstico</th>
+                <th>Medicação</th>
+                <th>Especialidade</th>
+            </tr>
+        </thead>
+        <tbody id="corpo-tabela-dados">
+            <!-- Os dados serão inseridos aqui pelo JavaScript -->
+            <tr>
+                <td>001</td>
+                <td>João da Silva</td>
+                <td>Gripe</td>
+                <td>Paracetamol</td>
+                <td>Clínico Geral</td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>Maria Oliveira</td>
+                <td>Dermatite</td>
+                <td>Creme hidratante</td>
+                <td>Dermatologia</td>
+            </tr>
+            <tr>
+                <td>003</td>
+                <td>Carlos Souza</td>
+                <td>Fratura no braço</td>
+                <td>Gesso</td>
+                <td>Ortopedia</td>
+            </tr>
+            <tr>
+                <td>004</td>
+                <td>Ana Costa</td>
+                <td>Exame de rotina</td>
+                <td>---</td>
+                <td>Ginecologia</td>
+            </tr>
+            <tr>
+                <td>005</td>
+                <td>Pedro Fernandes</td>
+                <td>Tosse persistente</td>
+                <td>Xarope para tosse</td>
+                <td>Pediatria</td>
+            </tr>
+            <tr>
+                <td>006</td>
+                <td>Juliana Santos</td>
+                <td>Arritmia cardíaca</td>
+                <td>Medicação para controle do ritmo cardíaco</td>
+                <td>Cardiologia</td>
+            </tr>
+            <tr>
+                <td>007</td>
+                <td>Luisa Rodrigues</td>
+                <td>Exame de vista</td>
+                <td>---</td>
+                <td>Oftalmologia</td>
+            </tr>
+            <tr>
+                <td>008</td>
+                <td>Fernando Oliveira</td>
+                <td>Dor de cabeça crônica</td>
+                <td>Analgésico</td>
+                <td>Neurologia</td>
+            </tr>
+            <tr>
+                <td>009</td>
+                <td>Roberto Alves</td>
+                <td>Diabetes</td>
+                <td>Insulina</td>
+                <td>Endocrinologia</td>
+            </tr>
+            <tr>
+                <td>010</td>
+                <td>Sofia Lima</td>
+                <td>Depressão</td>
+                <td>Antidepressivo</td>
+                <td>Psiquiatria</td>
+            </tr>
+            
+            
+        </tbody>
+    </table>
+</section>
+<!-- Fim da seção da tabela de dados -->
+
+<!-- Inicio da função de enviar informações do formulario CHATGBT que deu essa função não sei se vai funcionar-->
+
+
+<!-- <script>
+    $(document).ready(function(){
+        // Faz uma solicitação AJAX para obter os dados do servidor
+        $.ajax({
+            url: 'seu_servidor_dados.php', // Substitua pelo URL do seu servidor e endpoint para obter os dados
+            method: 'GET',
+            dataType: 'json',
+            success: function(data){
+                // Limpa o conteúdo atual da tabela
+                $('#corpo-tabela-dados').empty();
+                // Itera sobre os dados recebidos e os insere na tabela
+                $.each(data, function(index, item){
+                    var row = $('<tr>');
+                    row.append($('<td>').text(item.data));
+                    row.append($('<td>').text(item.hora));
+                    row.append($('<td>').text(item.status));
+                    row.append($('<td>').text(item.nomeMedico));
+                    row.append($('<td>').text(item.nomePaciente));
+                    row.append($('<td>').text(item.especialidade));
+                    $('#corpo-tabela-dados').append(row);
+                });
+            },
+            error: function(){
+                console.log('Erro ao obter os dados do servidor.');
+            }
+        });
+    });
+    </script>
+     -->
+<!-- Fim da função de enviar informações do formulario -->
