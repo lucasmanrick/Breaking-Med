@@ -6,11 +6,11 @@ const QuerieConsulta = {
   async retornaConsultasAdm() {
     const conn = await connection();
     try {
-      const consultas = await conn.query('select * from tbl_consulta')
+      const consultas = await conn.query('select * from tbl_consulta where status=1')
       if (consultas[0].length === 0) {
         return { consultaMessage: 'não foi possivel retornar as consultas, ou não tem consultas a serem retornadas, por favor tente novamente', result: false }
       }
-      return { consultaMessage: 'retornando todas consultas pendentes ao adm', result: true }
+      return { consultaMessage: 'retornando todas consultas pendentes ao adm', result: true, moreInfos:consultas[0] }
     }
     catch (e) {
       console.log(e)
@@ -70,15 +70,16 @@ const QuerieConsulta = {
     }
   },
 
-  retornaConsultaDeUsuarioLogado: async (pessoaObj) => {
+  retornaConsultaDePacienteLogado: async (pessoaObj) => {
+    console.log('não conectou')
     const conn = await connection();
+    console.log('conectou')
     let returnMessage;
     try {
-      const pegaConsultasDoUsuario = await conn.query('select id as idConsulta,data as dataConsulta,hora as horaConsulta,status as statusConsulta,paciente_id,paciente_pessoa_id,funcionario_id,funcionario_pessoa_id,especialidade_id from tbl_consulta where paciente_pessoa_id=? and status=1', [pessoaObj.id]);
-
-      if (pegaConsultasDoUsuario[0].length !== 0) {
-        returnMessage = { consultaMessage: 'O usuário tem consultas pendentes', result: true };
-        returnMessage.moreInfos = pegaConsultasDoUsuario[0];
+      const pegaConsultasDoPaciente = await conn.query('select id as idConsulta,data as dataConsulta,hora as horaConsulta,status as statusConsulta,paciente_id,paciente_pessoa_id,funcionario_id,funcionario_pessoa_id,especialidade_id from tbl_consulta where paciente_pessoa_id=? and status=1', [pessoaObj.id]);
+      if (pegaConsultasDoPaciente[0].length !== 0) {
+        returnMessage = { consultaMessage: 'O Paciente tem consultas pendentes', result: true };
+        returnMessage.moreInfos = pegaConsultasDoPaciente[0];
 
         const promessasConsultas = returnMessage.moreInfos.map(async (el) => {
           el.status = 'ativo';
@@ -105,10 +106,39 @@ const QuerieConsulta = {
     }
   },
 
+  retornaConsultaDeMedicoLogado: async (pessoaObj) => {
+    const conn = await connection();
+      try {
+        const pegaConsultasDoMedico = await conn.query('select id as idConsulta,data as dataConsulta,hora as horaConsulta,status as statusConsulta,paciente_id,paciente_pessoa_id,funcionario_id,funcionario_pessoa_id,especialidade_id from tbl_consulta where funcionario_pessoa_id=? and status=1', [pessoaObj.id]);
+        if(pegaConsultasDoMedico[0].length === 0) {
+          return {consultaMessage:'o Médico não possui consultas pendentes ou não foi possivel retornar os dados no momento, por favor tente novamente!', result:false}
+        }else {
+          const promessasConsultas = returnMessage.moreInfos.map(async (el) => {
+            el.status = 'ativo';
+            const pegaNomeMedicoEEspecialidade = await conn.query('select p.nome as nomePaciente, p.cpf as cpfPaciente, ');
+            el.dadosPaciente = pegaNomeMedicoEEspecialidade[0][0];
+            el.dadosPaciente.funcionario_id = el.funcionario_id
+            el.dadosPaciente.funcionario_pessoa_id = el.funcionario_pessoa_id
+            el.dadosPaciente.especialidade_id = el.especialidade_id;
+  
+            delete el.funcionario_id;
+            delete el.funcionario_pessoa_id;
+            delete el.especialidade_id;
+            delete el.paciente_id;
+            delete el.paciente_pessoa_id;
+            return el;
+          });  
+        }
+      }catch(e) {
+        console.log(e)
+      }
+  },
+
   cancelaAgendamentoConsulta: async (idConsulta) => {
     const conn = await connection();
 
-    const consultaASerCancelada = conn.query('Update tbl_consulta set status=0 WHERE ID=?', [idConsulta])
+    const consultaASerCancelada = await conn.query('Update tbl_consulta set status=0 WHERE ID=?', [idConsulta])
+    console.log(consultaASerCancelada)
 
     if (consultaASerCancelada[0].affectedRows === 1) {
       return { consultaMessage: `o Agendamento de ID ${idConsulta} foi cancelado`, result: true }

@@ -145,15 +145,23 @@ const QuerysPessoa = {
         if(returnLoginQuery[0][0].tipo === 'administrador') {
           let pessId = returnLoginQuery[0][0].pessId
           const token = jwt.sign({ pessId }, process.env.SECRET, {
-            expiresIn: 300 // expires in 5min
+            expiresIn: 1000 // expires in 5min
           });
           return {loginMessage:'o cadastro é administrador, tem permissão total', result:true, token:token, moreInfos:returnLoginQuery[0][0]}
         }
         else if(returnLoginQuery[0][0].tipo === 'medico') {
-          return {loginMessage:'o cadastro é de um MEDICO, tem permissão a verificar suas consultas', result:true, moreInfos:returnLoginQuery[0][0]}
+          let pessId = returnLoginQuery[0][0].pessId
+          const token = jwt.sign({ pessId }, process.env.MEDIC, {
+            expiresIn: 300 // expires in 5min
+          });
+          return {loginMessage:'o cadastro é de um MEDICO, tem permissão a verificar suas consultas', result:true,token:token, moreInfos:returnLoginQuery[0][0]}
         }
         else if (returnLoginQuery[0][0].tipo === 'paciente') {
-          return {loginMessage:'o cadastro é de um paciente, tem permissão a verificar suas consultas', result:true, moreInfos:returnLoginQuery[0][0]}
+          let pessId = returnLoginQuery[0][0].pessId
+          const token = jwt.sign({ pessId }, process.env.PACIENT, {
+            expiresIn: 300 // expires in 5min
+          });
+          return {loginMessage:'o cadastro é de um paciente, tem permissão a verificar suas consultas', result:true, token:token,moreInfos:returnLoginQuery[0][0]}
         }else {
          return {loginMessage:'O cadastro não tem perfil, ou o perfil não é valido por favor valide.', result:false}
         }

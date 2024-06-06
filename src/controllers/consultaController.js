@@ -1,7 +1,8 @@
 const Pessoa = require('../models/Classes/PessoaClass');
 const Consulta = require('../models/Classes/consultaClass');
 const {registraNovaConsulta} = require('../models/Queries/ConsultaQuerie');
-const {retornaConsultaDeUsuarioLogado} = require('../models/Queries/ConsultaQuerie');
+const {retornaConsultaDePacienteLogado} = require('../models/Queries/ConsultaQuerie'); 
+const {retornaConsultaDeMedicoLogado} = require('../models/Queries/ConsultaQuerie'); 
 const {cancelaAgendamentoConsulta} = require('../models/Queries/ConsultaQuerie');
 const {verificaExistenciaDeUmUsuario} = require('../models/Queries/PessoaQuerie');
 const {retornaConsultasAdm} = require ('../models/Queries/ConsultaQuerie');
@@ -57,23 +58,33 @@ const consultaController = {
   },
 
   verificaConsultasPaciente: async (req,res) => {
-    const {idPessoa} = req.params  //o id recebido aki é o do paciente
-    console.log(idPessoa)
+    const idPessoa = req.headers['idpessoa']  //o id recebido aki é o do paciente
     if(idPessoa) {
       const recebeConsultas = new Pessoa (idPessoa)
-      res.json(await retornaConsultaDeUsuarioLogado (recebeConsultas))
+      res.json(await retornaConsultaDePacienteLogado (recebeConsultas))
+      return
     } else {
       res.json({consultaMessage:'o id do paciente que está solicitando consultas pendentes não foi passado', result:false})
     }
   },
 
+  verificaConsultasMedico:async (req,res) => {
+    const idFuncionario = req.headers['idFuncionario']
+    if(idFuncionario) {
+      const recebeConsultas = new Pessoa (idFuncionario)
+      res.json(await retornaConsultaDeMedicoLogado (recebeConsultas))
+    }
+  },
+
   cancelaConsulta: async (req,res) => {
-    const {idDaConsulta} = req.params;
+    const idDaConsulta = req.headers['idconsulta'];
+    console.log(req.headers)
     if(!idDaConsulta) {
-      return{consultaMessage:'o id da consulta não chegou corretamente ao servidor, tente novamente!',result:false}
+      res.json({consultaMessage:'o id da consulta não chegou corretamente ao servidor, tente novamente!',result:false})
+      return
     } 
 
-   return(await cancelaAgendamentoConsulta(idDaConsulta))
+   res.json(await cancelaAgendamentoConsulta(idDaConsulta))
   }
 }
 
