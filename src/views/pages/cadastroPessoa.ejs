@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../public/css/cadastroPessoa.css">
+<!-- Formulário de cadastro -->
+ <form id="cadastro" onsubmit="exibirAlerta()">
+    <h1 id="cadastroPessoa">CADASTRO DE PESSOA</h1>
+    <input type="text" name="nome" id="nome" placeholder="Nome">
+    <input type="text" name="cpf" id="cpf" placeholder="Cpf">
+    <select name="Gênero" id="genero">
+        <option value="masculino">Masculino</option>
+        <option value="feminino">Feminino</option>
+        <option value="outro">Outro</option>
+    </select>
+    <input type="date" name="dataNasc" id="dataNasc">
+    <input type="email" name="Email" id="email" placeholder="Email">
+    <input type="text" name="logradouro" id="logradouro" placeholder="Logradouro">
+    <input type="text" name="bairro" id="bairro" placeholder="Bairro">
+    <input type="text" name="estado" id="estado" placeholder="Estado">
+    <input type="text" name="numero" id="numero" placeholder="Numero">
+    <input type="text" name="complemento" id="complemento" placeholder="Complemento">
+    <input type="text" name="cep" id="cep" placeholder="Cep">
+    <input type="number" name="telefones" id="telefones" placeholder="Telefones">
+    <select name="personPerfil" id="personPerfil">
+        <option value="Medico">Medico</option>
+        <option value="Administrador">Administrador</option>
+        <option value="Paciente">Paciente</option>
+    </select>
+    <input type="number" name="dataAdmissao" id="dataAdmissao" placeholder="Data Admissao">
+    <input type="number" name="crm" id="crm" placeholder="Crm">
+    <input type="text" name="descEspecialidade" id="descEspecialidade" placeholder="descEspecialidade">
+    
+    <button type="submit">Enviar</button>
+</form>
+<!-- Fim do formulário de cadastro -->
