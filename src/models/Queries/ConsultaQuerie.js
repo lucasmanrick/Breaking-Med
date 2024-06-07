@@ -115,7 +115,7 @@ const QuerieConsulta = {
         }else {
           const promessasConsultas = returnMessage.moreInfos.map(async (el) => {
             el.status = 'ativo';
-            const pegaNomeMedicoEEspecialidade = await conn.query('select p.nome as nomePaciente, p.cpf as cpfPaciente, ');
+            const pegaNomeMedicoEEspecialidade = await conn.query('select p.nome as nomePaciente, p.cpf as cpfPaciente,c.data as dataConsulta,c.hora as horaConsulta, c.status as statusConsulta from tbl_pessoa as p join tbl_paciente as pac on pac.pessoa_id=p.id join tbl_consulta as c on pac.pessoa_id=c.id ');
             el.dadosPaciente = pegaNomeMedicoEEspecialidade[0][0];
             el.dadosPaciente.funcionario_id = el.funcionario_id
             el.dadosPaciente.funcionario_pessoa_id = el.funcionario_pessoa_id
