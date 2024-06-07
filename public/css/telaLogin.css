@@ -14,7 +14,7 @@
 }
 
 body{
-    background: url(../img//img1.jpeg) no-repeat;
+    background: url(../../public/img/imgfundo.jpeg) no-repeat;
     background-size: cover;
     background-position: center;
     display: flex;
