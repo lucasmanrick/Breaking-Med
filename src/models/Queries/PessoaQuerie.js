@@ -142,22 +142,6 @@ const QuerysPessoa = {
           delete returnLoginQuery[0][0].pessId
           return {loginMessage:'o cadastro é administrador, tem permissão total', result:true, token:token, moreInfos:returnLoginQuery[0][0]}
         }
-        else if(returnLoginQuery[0][0].tipo === 'medico') {
-          let pessId = returnLoginQuery[0][0].pessId
-          const token = jwt.sign({ pessId }, process.env.MEDICO, {
-            expiresIn: 300 // expires in 5min
-          });
-          delete returnLoginQuery[0][0].pessId
-          return {loginMessage:'o cadastro é de um MEDICO, tem permissão a verificar suas consultas', result:true, token:token, moreInfos:returnLoginQuery[0][0]}
-        }
-        else if (returnLoginQuery[0][0].tipo === 'paciente') {
-          let pessId = returnLoginQuery[0][0].pessId
-          const token = jwt.sign({ pessId }, process.env.PACIENTE, {
-            expiresIn: 300 // expires in 5min
-          });
-          delete returnLoginQuery[0][0].pessId
-          return {loginMessage:'o cadastro é de um paciente, tem permissão a verificar suas consultas', result:true, token:token, moreInfos:returnLoginQuery[0][0]}
-        }
       }
     }
     catch(e) {
