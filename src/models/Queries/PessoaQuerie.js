@@ -149,8 +149,6 @@ const QuerysPessoa = {
           });
           return {loginMessage:'o cadastro é administrador, tem permissão total', result:true, token:token, moreInfos:returnLoginQuery[0][0]}
         }
-<<<<<<< HEAD
-=======
         else if(returnLoginQuery[0][0].tipo === 'medico') {
           let pessId = returnLoginQuery[0][0].pessId
           const token = jwt.sign({ pessId }, process.env.MEDIC, {
@@ -167,7 +165,6 @@ const QuerysPessoa = {
         }else {
          return {loginMessage:'O cadastro não tem perfil, ou o perfil não é valido por favor valide.', result:false}
         }
->>>>>>> 73629c1ab155f7bf98eaee3bc246afb856e2fef1
       }
     }
     catch(e) {

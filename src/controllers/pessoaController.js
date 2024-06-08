@@ -81,6 +81,10 @@ const pessoaControllers = {
       res.json (pegaEspecialidadeOuEspecialidades)
   },
 
+  direcionamentoLogin: (req,res) => {
+    res.render('pages/telaLogin')
+  },
+
   verificaEntrada: async (req,res) => { //função que realiza o login do usuario
     const {login,senha} = req.body
 

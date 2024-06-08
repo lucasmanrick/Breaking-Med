@@ -20,20 +20,6 @@ function verifyJWT(req, res, next){
     });
 }
 
-<<<<<<< HEAD
-
-//adm
-router.get('/RegistroCliente', verifyJWT, pessoaControllers.especialidadesDisponiveisOuEspecialidadeDeUmFuncionario) //retorna todas especialidades para o adminsitrador registrar
-router.post('/RegistroCliente',verifyJWT ,pessoaControllers.registroDeUsuario) //para registrar um novo usuario
-router.get('/RegistroCliente/:idFuncionario',verifyJWT,pessoaControllers.especialidadesDisponiveisOuEspecialidadeDeUmFuncionario)
-router.post('/Consulta',verifyJWT ,consultaController.novaConsulta) //para o administrador agendar uma nova consulta
-router.put('/Consulta/:idDaConsulta',verifyJWT,consultaController.cancelaConsulta)
-
-
-//paciente
-router.get('/ConsultaPaciente/:idPessoa' ,consultaController.verificaConsultasPaciente)
-router.post('/login',pessoaControllers.verificaEntrada)
-=======
 
 
 function verifyJWTMedico(req, res, next){
@@ -66,7 +52,7 @@ function verifyJWTPaciente(req, res, next){
 
 // router.get('/Registros', controllers.)
 
-//adm
+// //adm
 router.get('/RegistroCliente',verifyJWT, pessoaControllers.retornaTodasEspecialidades) //retorna todas especialidades para o adminsitrador registrar um novo usuario
 router.post('/RegistroCliente',verifyJWT ,pessoaControllers.registroDeUsuario) //registra um novo usuario se tiver o token ou seja se tiver permissao de adm
 
@@ -91,8 +77,8 @@ router.get('/ConsultaPaciente',verifyJWTPaciente,consultaController.verificaCons
 
 
 //login
+router.get('/login', pessoaControllers.direcionamentoLogin)
 router.post('/login',pessoaControllers.verificaEntrada) // verifica se o login passado existe e retorna token para ter acesso ao site.
->>>>>>> 73629c1ab155f7bf98eaee3bc246afb856e2fef1
 
 
 
