@@ -3,7 +3,7 @@ const Endereco = require('../models/Classes/enderecoClass')
 const Perfis = require ('../models/Classes/perfisClass')
 const Consulta = require ('../models/Classes/consultaClass')
 const {novoRegistroPessoa} = require('../models/Queries/PessoaQuerie');
-const {pegaTodasEspecialidadesOuADeUmFuncionario} = require('../models/Queries/PessoaQuerie');
+const {retornaEspecialidade} = require('../models/Queries/PessoaQuerie');
 const {logandoCliente} = require('../models/Queries/PessoaQuerie')
 const Login = require('../models/Classes/loginClass');
 const Telefone = require('../models/Classes/telefoneClass');
@@ -76,23 +76,14 @@ const pessoaControllers = {
     }
   },
 
-  especialidadesDisponiveisOuEspecialidadeDeUmFuncionario: async (req,res) => {
-    const {idFuncionario} = req.params
-    let pegaEspecialidadeOuEspecialidades
-    if(idFuncionario) {
-      pegaEspecialidadeOuEspecialidades = await pegaTodasEspecialidadesOuADeUmFuncionario(idFuncionario)
-      res.json(pegaEspecialidadeOuEspecialidades)
-      return
-    } else {
-      pegaEspecialidadeOuEspecialidades = await pegaTodasEspecialidadesOuADeUmFuncionario()
+  retornaTodasEspecialidades: async (req,res) => {
+    pegaEspecialidadeOuEspecialidades = await retornaEspecialidade()
       res.json (pegaEspecialidadeOuEspecialidades)
-    }
-   
   },
 
   verificaEntrada: async (req,res) => { //função que realiza o login do usuario
     const {login,senha} = req.body
-    console.log(login,senha)
+
     if(login && senha) {
       const LoginObj = new Login (null,login,senha);
 

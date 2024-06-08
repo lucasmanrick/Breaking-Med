@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../public/css/telaLogin.css">
+
+<div class="container">
+    <form class="forms-container">
+       
+        <h3>Seja Bem-vindo!</h3>
+
+        <div class="containers-inputs">
+            <div class="input-container">
+                <input placeholder="CPF" type="text" required id="email" >
+                <i class="fas fa-user"></i>
+            </div>
+
+            <div class="senha-container">
+                <input placeholder="Senha" type="password" required id="senha">
+                <i class="fas fa-key"></i>
+            </div>
+
+            <a href="#" id="esqueciminhasenha">Esqueci minha senha</a>
+        </div>
+        
+
+        <button type="submit" class="submit-button">Entrar</button>
+
+        <div class="register-link">
+            <p>Não está cadastrado ? <a href="#">Cadastre-se</a> </p>
+        </div>
+
+    </form>
+</div>
+
+
+<script>
+    fetch("/login", {methodPost})
+</script>
