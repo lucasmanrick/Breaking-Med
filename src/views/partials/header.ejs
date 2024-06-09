@@ -2,27 +2,64 @@
 
 <header class="header">
 
-    <a href="#" class="logo">
-        <img src="../../../public/img/imgLogo1.jpg" alt="logo">
-    </a>
+  <a href="#" class="logo">
+    <img src="../../../public/img/imgLogo1.jpg" alt="logo">
+  </a>
 
-    <nav class="navbar">
-        <a href="#home">Início</a>
-        <a href="#sobre">Sobre nós</a>
-        <a href="#especialidades">Especialidades</a>
-        <a href="#contact">Contatos</a>
-        <a href="#login" id="telaLogin">Login</a>
-        
-    </nav>
+  <nav class="navbar" id="headerNavBar">
+    <a href="#home">Início</a>
+    <a href="#sobre">Sobre nós</a>
+    <a href="#especialidades">Especialidades</a>
+    <a href="/login" id="telaLogin">Login</a>
 
-    <div class="icons">
-        <div class="fas fa-sign-out-alt" id="search-btn"></div>
-    </div>
+  </nav>
 
-    
+  <div class="icons">
+    <div class="fas fa-sign-out-alt" id="search-btn"></div>
+  </div>
+
+
 
 </header>
 
 <script>
-    document.getElementById('telaLogin').addEventListener((E)=>{window.location.href="../pages/telaLogin.ejs"})
+  if (sessionStorage.getItem('userData')) {
+    const dataUser = JSON.parse(sessionStorage.getItem('userData'))
+    const token = dataUser.token
+    if (dataUser.moreInfos.tipo === 'administrador') {
+      document.getElementById('telaLogin').style = `display:none`
+      const navbar = document.getElementById('headerNavBar')
+      const newUserBtn = document.createElement('a')
+      newUserBtn.setAttribute('id', 'registerUser')
+      newUserBtn.innerText = `Registrar novo Usuário`
+      newUserBtn.href = ''
+      newUserBtn.addEventListener('click', (e) => {
+        e.preventDefault()
+        console.log('clicou')
+        fetch('/RegistroUsuario', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: token
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            sessionStorage.setItem("especialidades", JSON.stringify(data));
+            window.location = data.redirect
+          })
+          .catch(error => {
+            // Lidar com o erro
+            console.error('Erro:', error);
+          });
+      })
+
+      navbar.append(newUserBtn)
+    }
+
+
+
+
+
+  }
 </script>

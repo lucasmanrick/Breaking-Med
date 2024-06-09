@@ -17,7 +17,7 @@ const Especialidade = require('../models/Classes/especialidadeClass');
  
 */ 
 
-const pessoaControllers = {
+const redirecionamentoControllers = {
   registroDeUsuario: async (req,res) => { //create usuario que só funciona se o usuario que estiver registrando for adm
     try{
       // dados da tabela pessoa
@@ -68,7 +68,7 @@ const pessoaControllers = {
       }
 
        const retornaSucessFailure = await novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj,funcionarioObj === '' ? null : funcionarioObj, especialidadeObj == '' ? null : especialidadeObj)
-      retornaSucessFailure.redirect = '/RegistroDeUsuario'
+    
 
       res.json( retornaSucessFailure )
       }catch (e) {
@@ -77,33 +77,23 @@ const pessoaControllers = {
   },
 
   retornaTodasEspecialidades: async (req,res) => {
+    console.log(req.headers)
     pegaEspecialidadeOuEspecialidades = await retornaEspecialidade()
-    pegaEspecialidadeOuEspecialidades.redirect = '/RegisterPage'
-      res.json (pegaEspecialidadeOuEspecialidades)
+      res.render ('/pages/cadastroPessoa',pegaEspecialidadeOuEspecialidades)
   },
 
-  direcionamentoCadastroUsuario: (req,res) => {
-    res.render('pages/cadastroPessoa')
-  },
-
-  direcionamentoLogin: (req,res) => {
-    res.render('pages/telaLogin')
-  },
-
-
-  direcionamentoHome: (req,res) => {
-    res.render('pages/home')
-  },
-
-
+ 
   verificaEntrada: async (req,res) => { //função que realiza o login do usuario
     const {login,senha} = req.body
+
+    console.log(login,senha)
+    console.log(req.body)
 
     if(login && senha) {
       const LoginObj = new Login (null,login,senha);
 
       let returnTryLogin = await logandoCliente(LoginObj);
-      returnTryLogin.redirect = '/home'
+      returnTryLogin.redirect = 'pages/home'
       res.json(returnTryLogin)
     }
 
@@ -115,4 +105,4 @@ const pessoaControllers = {
 }
 
 
-module.exports = pessoaControllers
+module.exports = redirecionamentoControllers
