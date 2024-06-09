@@ -52,15 +52,16 @@ function verifyJWTPaciente(req, res, next){
 
 // router.get('/Registros', controllers.)
 
-// //adm
-router.get('/RegistroCliente',verifyJWT, pessoaControllers.retornaTodasEspecialidades) //retorna todas especialidades para o adminsitrador registrar um novo usuario
-router.post('/RegistroCliente',verifyJWT ,pessoaControllers.registroDeUsuario) //registra um novo usuario se tiver o token ou seja se tiver permissao de adm
+// rotas para registrar novo Usuario - ADM
+router.get('/RegistroUsuario',verifyJWT, pessoaControllers.retornaTodasEspecialidades) //retorna todas especialidades para o adminsitrador registrar um novo usuario
+router.post('/RegistroUsuario',verifyJWT ,pessoaControllers.registroDeUsuario) //registra um novo usuario se tiver o token ou seja se tiver permissao de adm
 
 
-
+// rotas para registro de consulta-ADM
 router.get('/DadosParaRegistroConsulta',verifyJWT, consultaController.retornaEspecialidadesEFuncionario) //retorna todas especialidades e os funcionarios vinculados a ela para conseguirmos agendar uma consulta.
 router.post('/NovaConsulta' ,verifyJWT,consultaController.novaConsulta) //para o administrador agendar uma nova consulta passamos essa rota no formulario
 
+// rotas para cancelamento de consulta-ADM
 router.get('/Consulta',verifyJWT, consultaController.retornaTodasConsultas) //retorna todas as consultas ativas para posteriormente conseguirmos desfazer o agendamento.
 router.put('/Consulta',verifyJWT,consultaController.cancelaConsulta)//para cancelar um agendamento.
 

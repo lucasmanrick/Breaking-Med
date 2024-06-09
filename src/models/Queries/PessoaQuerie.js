@@ -134,7 +134,7 @@ const QuerysPessoa = {
   logandoCliente: async (loginObj) => {
     const conn = await connection();
     try {
-      const returnLoginQuery = await conn.query('select l.status,perf.tipo, pess.id as pessId, pess.nome as nomeUsuário from tbl_login as l join tbl_perfis as perf on perf.login_id=l.id join tbl_pessoa as pess on pess.id=l.pessoa_id WHERE l.login=? AND l.senha=?',[loginObj.loginPessoa,loginObj.senhaPessoa])
+      const returnLoginQuery = await conn.query('select l.status,perf.tipo, pess.id as pessId, pess.nome as nomeUsuario from tbl_login as l join tbl_perfis as perf on perf.login_id=l.id join tbl_pessoa as pess on pess.id=l.pessoa_id WHERE l.login=? AND l.senha=?',[loginObj.loginPessoa,loginObj.senhaPessoa])
       // if(returnLoginQuery[0][0].status == 0) {
       //   return {loginMessage:'Cadastro não se encontra ativo consulte um administrador para reativa-lo', result:false}
       // }

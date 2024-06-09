@@ -78,7 +78,7 @@ const pessoaControllers = {
 
   retornaTodasEspecialidades: async (req,res) => {
     pegaEspecialidadeOuEspecialidades = await retornaEspecialidade()
-      res.json (pegaEspecialidadeOuEspecialidades)
+      res.render ('/pages/cadastroPessoa',pegaEspecialidadeOuEspecialidades)
   },
 
   direcionamentoLogin: (req,res) => {
@@ -87,6 +87,9 @@ const pessoaControllers = {
 
   verificaEntrada: async (req,res) => { //função que realiza o login do usuario
     const {login,senha} = req.body
+
+    console.log(login,senha)
+    console.log(req.body)
 
     if(login && senha) {
       const LoginObj = new Login (null,login,senha);
