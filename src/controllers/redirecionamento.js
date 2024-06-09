@@ -18,89 +18,30 @@ const Especialidade = require('../models/Classes/especialidadeClass');
 */ 
 
 const redirecionamentoControllers = {
-  registroDeUsuario: async (req,res) => { //create usuario que só funciona se o usuario que estiver registrando for adm
-    try{
-      // dados da tabela pessoa
-      const {nome,cpf,genero,dataNasc,email} = req.body;
-      // dados da tabela endereco
-      const {logradouro,bairro,estado,numero,complemento,cep} = req.body;
-      // dados da tabela telefones
-      const {telefones} = req.body;
-      // tipo da tabela perfil
-      const {personPerfil} = req.body;
-      // dados da tabela funcionario
-      const {dataAdmissao,crm} = req.body;
-      // dados para tabela especialidade
-      const {idEspec} = req.body;
-      
-
-      const date = new Date();
-    
-      const personObj = new Pessoa (null,nome,cpf,dataNasc,genero,email,date)
-
-    
-      const enderecoObj = new Endereco (null,logradouro,bairro,estado,numero,complemento,cep)
-      
-      
-
-      function randomizaSenha () {
-        let passReceive = ''
-        for(let i = 0; i <= 7; i++) {
-          let numActualy = Math.floor(Math.random() * 10)
-          passReceive += numActualy.toString()
-          console.log(passReceive)
-        }
-        return passReceive
-      }
-      
-      const loginObj = new Login (null,cpf,randomizaSenha(),0) 
-
-      const telefoneObj = new Telefone (null,telefones)
-      
-      const perfilObj = new Perfis (null,personPerfil)
-       
-
-      let funcionarioObj = ''
-      let especialidadeObj = ''
-      if(dataAdmissao && idEspec) {
-        funcionarioObj = new Funcionario (null,dataAdmissao,crm? crm:null );
-        especialidadeObj = new Especialidade (idEspec);
-      }
-
-       const retornaSucessFailure = await novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj,funcionarioObj === '' ? null : funcionarioObj, especialidadeObj == '' ? null : especialidadeObj)
-    
-
-      res.json( retornaSucessFailure )
-      }catch (e) {
-        res.json({cadastroMessage: `usuario não foi registrado, motivo: ${e}`,result:false})
-    }
+  direcionamentoConsultasPaciente: (req,res) => {
+    res.render('pages/consultaPaciente')
   },
 
-  retornaTodasEspecialidades: async (req,res) => {
-    console.log(req.headers)
-    pegaEspecialidadeOuEspecialidades = await retornaEspecialidade()
-      res.render ('/pages/cadastroPessoa',pegaEspecialidadeOuEspecialidades)
+  direcionamentoConsultasMedicas: (req,res) => {
+    res.render('pages/consultaMedico')
   },
 
- 
-  verificaEntrada: async (req,res) => { //função que realiza o login do usuario
-    const {login,senha} = req.body
+  direcionamentoAgendamentoConsulta: (req,res) => {
+    res.render('pages/agendamentoConsulta')
+  },
 
-    console.log(login,senha)
-    console.log(req.body)
+  direcionamentoCadastroUsuario: (req,res) => {
+    res.render('pages/cadastroPessoa')
+  },
 
-    if(login && senha) {
-      const LoginObj = new Login (null,login,senha);
+  direcionamentoLogin: (req,res) => {
+    res.render('pages/telaLogin')
+  },
 
-      let returnTryLogin = await logandoCliente(LoginObj);
-      returnTryLogin.redirect = 'pages/home'
-      res.json(returnTryLogin)
-    }
 
-   else {
-    res.json({loginMessage:'Você não informou login e senha tente novamente', result:false})
-   }
-  }
+  direcionamentoHome: (req,res) => {
+    res.render('pages/home')
+  },
 
 }
 

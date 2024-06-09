@@ -25,35 +25,13 @@
 <script>
   if (sessionStorage.getItem('userData')) {
     const dataUser = JSON.parse(sessionStorage.getItem('userData'))
-    const token = dataUser.token
     if (dataUser.moreInfos.tipo === 'administrador') {
       document.getElementById('telaLogin').style = `display:none`
       const navbar = document.getElementById('headerNavBar')
       const newUserBtn = document.createElement('a')
       newUserBtn.setAttribute('id', 'registerUser')
       newUserBtn.innerText = `Registrar novo Usuário`
-      newUserBtn.href = ''
-      newUserBtn.addEventListener('click', (e) => {
-        e.preventDefault()
-        console.log('clicou')
-        fetch('/RegistroUsuario', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: token
-          }
-        })
-          .then(response => response.json())
-          .then(data => {
-            sessionStorage.setItem("especialidades", JSON.stringify(data));
-            window.location = data.redirect
-          })
-          .catch(error => {
-            // Lidar com o erro
-            console.error('Erro:', error);
-          });
-      })
-
+      newUserBtn.href = '/RegisterPage'
       navbar.append(newUserBtn)
     }
 

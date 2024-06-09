@@ -32,6 +32,8 @@ const pessoaControllers = {
       const {dataAdmissao,crm} = req.body;
       // dados para tabela especialidade
       const {idEspec} = req.body;
+
+      console.log(req.body)
       
 
       const date = new Date();
@@ -48,7 +50,6 @@ const pessoaControllers = {
         for(let i = 0; i <= 7; i++) {
           let numActualy = Math.floor(Math.random() * 10)
           passReceive += numActualy.toString()
-          console.log(passReceive)
         }
         return passReceive
       }
@@ -68,8 +69,7 @@ const pessoaControllers = {
       }
 
        const retornaSucessFailure = await novoRegistroPessoa(personObj,enderecoObj,telefoneObj,loginObj,perfilObj,funcionarioObj === '' ? null : funcionarioObj, especialidadeObj == '' ? null : especialidadeObj)
-      retornaSucessFailure.redirect = '/RegistroDeUsuario'
-
+ 
       res.json( retornaSucessFailure )
       }catch (e) {
         res.json({cadastroMessage: `usuario não foi registrado, motivo: ${e}`,result:false})
@@ -78,23 +78,9 @@ const pessoaControllers = {
 
   retornaTodasEspecialidades: async (req,res) => {
     pegaEspecialidadeOuEspecialidades = await retornaEspecialidade()
-    pegaEspecialidadeOuEspecialidades.redirect = '/RegisterPage'
       res.json (pegaEspecialidadeOuEspecialidades)
   },
-
-  direcionamentoCadastroUsuario: (req,res) => {
-    res.render('pages/cadastroPessoa')
-  },
-
-  direcionamentoLogin: (req,res) => {
-    res.render('pages/telaLogin')
-  },
-
-
-  direcionamentoHome: (req,res) => {
-    res.render('pages/home')
-  },
-
+  
 
   verificaEntrada: async (req,res) => { //função que realiza o login do usuario
     const {login,senha} = req.body
