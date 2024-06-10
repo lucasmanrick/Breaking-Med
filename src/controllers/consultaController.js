@@ -85,6 +85,11 @@ const consultaController = {
     } 
 
    res.json(await cancelaAgendamentoConsulta(idDaConsulta))
+  },
+
+  preencheProntuario: async (req,res) => {
+    const {diagnostico,medicacao} = req.body;
+    const {consulta_id,consulta_paciente_id,consulta_paciente_pessoa_id,consulta_funcionario_id,consulta_funcionario_pessoa_id} = req.body
   }
 }
 

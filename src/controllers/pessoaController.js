@@ -96,7 +96,10 @@ const pessoaControllers = {
    else {
     res.json({loginMessage:'Você não informou login e senha tente novamente', result:false})
    }
-  }
+  },
+
+
+  
 
 }
 

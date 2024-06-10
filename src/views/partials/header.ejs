@@ -9,7 +9,7 @@
   <nav class="navbar" id="headerNavBar">
     <a href="#home">Início</a>
     <a href="#sobre">Sobre nós</a>
-    <a href="#especialidades">Especialidades</a>
+    <a href="/especialidades">Especialidades</a>
     <a href="/login" id="telaLogin">Login</a>
 
   </nav>
@@ -26,17 +26,28 @@
   if (sessionStorage.getItem('userData')) {
     const dataUser = JSON.parse(sessionStorage.getItem('userData'))
     if (dataUser.moreInfos.tipo === 'administrador') {
-      document.getElementById('telaLogin').style = `display:none`
+      const btnLogin = document.getElementById('telaLogin')
       const navbar = document.getElementById('headerNavBar')
+
+      navbar.removeChild(btnLogin)
+
       const newUserBtn = document.createElement('a')
       newUserBtn.setAttribute('id', 'registerUser')
       newUserBtn.innerText = `Registrar novo Usuário`
       newUserBtn.href = '/RegisterPage'
       navbar.append(newUserBtn)
+
+      const newConsultaBtn = document.createElement('a')
+      newConsultaBtn.setAttribute('id', 'registerUser')
+      newConsultaBtn.innerText = `Agendamento de consulta`
+      newConsultaBtn.href = '/NovaConsulta'
+      navbar.append(newConsultaBtn)
     }
 
 
-
+    if(dataUser.moreInfos.tipo === 'administrador') {
+      document.getElementById('')
+    }
 
 
   }
