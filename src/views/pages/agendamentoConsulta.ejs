@@ -1,47 +1,84 @@
-<link rel="stylesheet" href="../../../public/css/agendamentoConsulta.css">
+<link rel="stylesheet" href="css/agendamentoConsulta.css">
 
 <div class="container">
-    <div class="div-titles">
-        <h3>Agendamento de Consulta</h3>
-    </div>
-    <h5 id="Nomeh5">Nome do Médico:</h5>
-    <h5 id="Especialidadeh5">Especialidade do Médico:</h5>
-    <h5 id="Horarioh5">Horário da consulta:</h5>
-    <h5 id="Datah5">Data da consulta:</h5>
+  <div class="div-titles">
+    <h3>Agendamento de Consulta</h3>
+  </div>
+  <h5 id="Nomeh5">Nome do Médico:</h5>
+  <h5 id="Especialidadeh5">Especialidade do Médico:</h5>
+  <h5 id="Horarioh5">Horário da consulta:</h5>
+  <h5 id="Datah5">Data da consulta:</h5>
 
 
 
 
 
-    <input placeholder="CPF do cliente" type="text" required id="CPF">
-    
-    <div class="formstotal">
+  <input placeholder="CPF do cliente" type="text" required id="CPF">
 
-        <form class="forms" action="">
-            <select class="form-control" name="Nome" id="Nome">
-                <option value="1">Gustavo</option>
-                <option value="2">Lucas</option>
-                <option value="3">Kevin</option>
-            </select>
-            <select class="form-control" name="Especialidade" id="Especialidade">
-                <option value="1">Medico Geral</option>
-                <option value="2">Pediatra</option>
-                <option value="3">Cardiologista</option>
-            </select>
-        </form>
+  <div class="formstotal">
 
-        <div class="input-container">
-            <input placeholder="Hora" type="text" required id="Hora">
-            <input placeholder="Data" type="text" required id="Data">
-           
-         </div>
+    <form class="forms" action="/">
+      <select class="form-control" name="Nome" id="Nome">
+      </select>
+      <select class="form-control" name="Especialidade" id="Especialidade">
+        <option value="1">Medico Geral</option>
+        <option value="2">Pediatra</option>
+        <option value="3">Cardiologista</option>
+      </select>
+    </form>
+
+    <div class="input-container">
+      <input placeholder="Hora" type="text" required id="Hora">
+      <input placeholder="Data" type="text" required id="Data">
 
     </div>
 
+  </div>
 
 
 
-    <div class="btn">
-        <button type="button" id="Agendar">Agendar</button>
-        <button type="button" id="Voltar">Voltar</button>
-    </div>
+
+  <div class="btn">
+    <button type="button" id="Agendar">Agendar</button>
+    <button type="button" id="Voltar">Voltar</button>
+  </div>
+
+
+  <script>
+    const dataUser = JSON.parse(sessionStorage.getItem('userData'))
+    const token = dataUser.token
+
+    fetch('/DadosParaRegistroConsulta', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: token
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.result === false) {
+          alert("não foi possivel retornar as especializações disponiveis para registro erro:", data.cadastroMessage)
+          return
+        } else if (data.auth === false) {
+          alert('usuario deslogado, logue novamente para continuar')
+          window.location = '/login'
+        }
+        sessionStorage.setItem("especialidadesToConsulta", JSON.stringify(data));
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+      });
+
+
+      const selectEspecialidade = document.getElementById('Especialidade')
+
+      const receiveEspecialities = sessionStorage.getItem("especialidadesToConsulta")
+      receiveEspecialities.moreInfos.forEach(e => {
+        const createNewOption = document.createElement('option')
+        createNewOption.value = `${e.funcionario_id}`;
+        createNewOption.innerText = `${e.desc_especialidade}`
+      })
+      selectEspecialidade.appendChild()
+
+  </script>

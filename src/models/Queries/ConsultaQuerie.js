@@ -58,6 +58,8 @@ const QuerieConsulta = {
       if (cRes[0].affectedRows === 1) {
         const pacientName = await conn.query('select nome from tbl_pessoa where id=?', [consultaObj.pacientePessoaId])
         const doctorName = await conn.query('select nome from tbl_pessoa where id=?', [consultaObj.funcionarioPessoaId])
+        const createPront = await conn.query ('insert into tbl_prontuario (consulta_id,consulta_paciente_id,consulta_paciente_pessoa_id,consulta_funcionario_id,consulta_funcionario_pessoa_id,consulta_especialidade_id) VALUES (?,?,?,?,?,?)', [cRes[0].insertId,consultaObj.pacienteId,consultaObj.pacientePessoaId,consultaObj.funcionarioId,consultaObj.funcionarioPessoaId,consultaObj.especialidadeId])
+        
         await conn.commit();
         return { consultaMessage: 'consulta registrada com sucesso', result: true, moreInfos: { data: consultaObj.dataConsulta, hora: consultaObj.horaConsulta, pacientName: pacientName[0][0].nome, doctorName: doctorName[0][0].nome } }
       }
