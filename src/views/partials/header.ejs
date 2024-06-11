@@ -7,8 +7,8 @@
   </a>
 
   <nav class="navbar" id="headerNavBar">
-    <a href="#home">Início</a>
-    <a href="#sobre">Sobre nós</a>
+    <a href="/home">Início</a>
+    <a href="/sobre">Sobre nós</a>
     <a href="/especialidades">Especialidades</a>
     <a href="/login" id="telaLogin">Login</a>
 
@@ -25,11 +25,18 @@
 <script>
   if (sessionStorage.getItem('userData')) {
     const dataUser = JSON.parse(sessionStorage.getItem('userData'))
+    const keys = sessionStorage.key('')
+
+    console.log(keys, 3)
+
     if (dataUser.moreInfos.tipo === 'administrador') {
       const btnLogin = document.getElementById('telaLogin')
       const navbar = document.getElementById('headerNavBar')
 
-      navbar.removeChild(btnLogin)
+      if(btnLogin) {
+        navbar.removeChild(btnLogin)
+      }
+    
 
       const newUserBtn = document.createElement('a')
       newUserBtn.setAttribute('id', 'registerUser')
@@ -38,17 +45,31 @@
       navbar.append(newUserBtn)
 
       const newConsultaBtn = document.createElement('a')
-      newConsultaBtn.setAttribute('id', 'registerUser')
+      newConsultaBtn.setAttribute('id', 'consultasBtn')
       newConsultaBtn.innerText = `Agendamento de consulta`
       newConsultaBtn.href = '/NovaConsulta'
       navbar.append(newConsultaBtn)
+
+      const manipulaConsultas = document.createElement('a')
+      manipulaConsultas.setAttribute('id', 'QueryManipulate')
+      manipulaConsultas.innerText = `Manipulação de consultas`
+      manipulaConsultas.href = '/NovaConsulta'
+      navbar.append(manipulaConsultas)
+
     }
 
 
-    if(dataUser.moreInfos.tipo === 'administrador') {
+    if (dataUser.moreInfos.tipo === 'administrador') {
       document.getElementById('')
     }
 
 
+  } else {
+    const navbar = document.getElementById('headerNavBar')
+    navbar.innerHTML = ''
+    navbar.innerHTML = `<a href="/home">Início</a>
+    <a href="/sobre">Sobre nós</a>
+    <a href="/especialidades">Especialidades</a>
+    <a href="/login" id="telaLogin">Login</a>`
   }
 </script>

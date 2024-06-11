@@ -68,6 +68,10 @@ router.get('/Consulta',verifyJWT, consultaController.retornaTodasConsultas) //ab
 router.put('/Consulta',verifyJWT,consultaController.cancelaConsulta)//para cancelar um agendamento.
 
 
+//updateDeProntuario 
+
+router.put('/Prontuario', verifyJWTMedico, consultaController.preencheProntuario)
+
 
 // pagina de visualização de consulta de medico
 

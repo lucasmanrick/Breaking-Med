@@ -23,17 +23,24 @@
     <option value="administrador">Administrador</option>
     <option value="paciente">Paciente</option>
   </select>
-  <input type="number" name="dataAdmissao" id="dataAdmissao" placeholder="Data Admissao">
+  <input type="date" name="dataAdmissao" id="dataAdmissao" placeholder="Data Admissao">
   <input type="number" name="crm" id="crm" placeholder="Crm">
-  <input type="text" name="idEspec" id="idEspec" placeholder="idEspec">
+  <select name="especialidadeParaRegistro" id="especialidadeParaRegistro">
+    
+  </select>
 
   <button type="submit">Enviar</button>
 </form>
 <!-- Fim do formulário de cadastro -->
 
 <script defer>
+
+
+
   const dataUser = JSON.parse(sessionStorage.getItem('userData'))
   const token = dataUser.token
+
+
   fetch('/RegistroUsuario', {
     method: 'GET',
     headers: {
@@ -43,13 +50,46 @@
   })
     .then(response => response.json())
     .then(data => {
-      sessionStorage.setItem("especialidades", JSON.stringify(data));
+      if (data.result === false) {
+        alert("não foi possivel retornar as especializações disponiveis para registro erro:", data.cadastroMessage)
+        return
+      } else if (data.auth === false) {
+        alert('usuario deslogado, logue novamente para continuar')
+        window.location = '/login'
+      }
+      sessionStorage.setItem("especialidadesToRegister", JSON.stringify(data));
     })
     .catch(error => {
-      // Lidar com o erro
       console.error('Erro:', error);
     });
 
+
+  const especialidadeExiste = sessionStorage.getItem('especialidadesToRegister')
+  if (!especialidadeExiste) {
+    const dataAdmissaoBtn = document.getElementById('dataAdmissao')
+    const crmBtn = document.getElementById('crm')
+
+
+    document.getElementById('cadastro').removeChild(dataAdmissaoBtn)
+    document.getElementById('cadastro').removeChild(crmBtn)
+  }else {
+    const especialidadeParaRegistro = document.getElementById('especialidadeParaRegistro')
+
+    let htmlInsert = ``
+
+    const parseEspec = JSON.parse(especialidadeExiste)
+
+    if(parseEspec.moreInfos !== undefined) {
+      parseEspec.moreInfos.forEach(e => {
+      const optionToChoose = document.createElement('option')
+      optionToChoose.value = `${e.id}`
+      optionToChoose.innerText = `${e.desc_especialidade}`
+      especialidadeParaRegistro.appendChild(optionToChoose)
+    })
+    }
+  }
+
+  
 
   document.getElementById('cadastro').addEventListener('submit', (e) => {
     e.preventDefault()
@@ -68,7 +108,7 @@
     const personPerfil = document.getElementById('personPerfil').value
     const dataAdmissao = document.getElementById('dataAdmissao').value
     const crm = document.getElementById('crm').value
-    const idEspec = document.getElementById('idEspec').value
+    const idEspec = document.getElementById('especialidadeParaRegistro').value
 
 
 
@@ -98,12 +138,23 @@
         idEspec: idEspec
       })
     })
-      .then(response => console.log(response))
+      .then(response => response.json())
+      .then(data => {
+        if (data.result === false) {
+          alert("algo deu errado durante o registro do usuario, por favor tente novamente!")
+          return
+        } else if (data.auth === false) {
+          alert('usuario deslogado, logue novamente para continuar')
+          window.location = '/login'
+        }
+        alert('usuario registrado com sucesso')
+      })
       .catch(error => {
         // Lidar com o erro
         console.error('Erro:', error);
       });
 
   })
+
 
 </script>
