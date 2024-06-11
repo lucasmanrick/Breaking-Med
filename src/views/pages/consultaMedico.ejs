@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="../../../public/css/consultaMedico.css">
+<link rel="stylesheet" href="css/consultaMedico.css">
 <!-- Seção da tabela de dados -->
 <section class="dados" id="dados">
     <h1 class="heading"> <span>Tabela de Dados</span> </h1>
@@ -10,6 +10,7 @@
                 <th>Diagnóstico</th>
                 <th>Medicação</th>
                 <th>Especialidade</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody id="corpo-tabela-dados">
@@ -20,6 +21,8 @@
                 <td>Gripe</td>
                 <td>Paracetamol</td>
                 <td>Clínico Geral</td>
+                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
+
             </tr>
             <tr>
                 <td>002</td>
@@ -27,6 +30,7 @@
                 <td>Dermatite</td>
                 <td>Creme hidratante</td>
                 <td>Dermatologia</td>
+                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
             </tr>
             <tr>
                 <td>003</td>
@@ -34,6 +38,7 @@
                 <td>Fratura no braço</td>
                 <td>Gesso</td>
                 <td>Ortopedia</td>
+                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
             </tr>
             <tr>
                 <td>004</td>
@@ -41,6 +46,7 @@
                 <td>Exame de rotina</td>
                 <td>---</td>
                 <td>Ginecologia</td>
+                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
             </tr>
             <tr>
                 <td>005</td>
@@ -48,6 +54,7 @@
                 <td>Tosse persistente</td>
                 <td>Xarope para tosse</td>
                 <td>Pediatria</td>
+                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
             </tr>
             <tr>
                 <td>006</td>
@@ -55,6 +62,7 @@
                 <td>Arritmia cardíaca</td>
                 <td>Medicação para controle do ritmo cardíaco</td>
                 <td>Cardiologia</td>
+                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
             </tr>
             <tr>
                 <td>007</td>
@@ -62,6 +70,7 @@
                 <td>Exame de vista</td>
                 <td>---</td>
                 <td>Oftalmologia</td>
+                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
             </tr>
             <tr>
                 <td>008</td>
@@ -69,6 +78,7 @@
                 <td>Dor de cabeça crônica</td>
                 <td>Analgésico</td>
                 <td>Neurologia</td>
+                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
             </tr>
             <tr>
                 <td>009</td>
@@ -76,6 +86,7 @@
                 <td>Diabetes</td>
                 <td>Insulina</td>
                 <td>Endocrinologia</td>
+                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
             </tr>
             <tr>
                 <td>010</td>
@@ -83,44 +94,117 @@
                 <td>Depressão</td>
                 <td>Antidepressivo</td>
                 <td>Psiquiatria</td>
+                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
             </tr>
-            
-            
+
+
         </tbody>
     </table>
 </section>
 <!-- Fim da seção da tabela de dados -->
 
-<!-- Inicio da função de enviar informações do formulario CHATGBT que deu essa função não sei se vai funcionar-->
+<!-- Seção do prontuário -->
+<div id="prontuarioModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="fecharProntuario()">&times;</span>
+        <h2>Prontuário</h2>
+        <div id="prontuarioContent">
+            <!-- Conteúdo do prontuário será adicionado aqui -->
+        </div>
+    </div>
+</div>
+<!-- Fim da seção do prontuário -->
+<script>
+    // Função para abrir o prontuário
+    function abrirProntuario(consultaId) {
+        // falta criar lógica para carregar os dados do prontuário com base no ID da consulta
+        var prontuarioContent = document.getElementById("prontuarioContent");
+        prontuarioContent.innerHTML = "<p>Conteúdo do prontuário para a consulta ID " + consultaId + "</p>";
 
+        // Exibe o modal do prontuário
+        var prontuarioModal = document.getElementById("prontuarioModal");
+        prontuarioModal.style.display = "block";
+    }
+
+    // Função para fechar o prontuário
+    function fecharProntuario() {
+        // Oculta o modal do prontuário
+        var prontuarioModal = document.getElementById("prontuarioModal");
+        prontuarioModal.style.display = "none";
+    }
+
+    // Função para simular a obtenção dos dados da consulta
+    function obterDadosConsulta() {
+        var dados = [
+            { id: 1, nomePaciente: "João da Silva", diagnostico: "Gripe", medicacao: "Paracetamol", especialidade: "Clínico Geral" },
+            { id: 2, nomePaciente: "Maria Oliveira", diagnostico: "Dermatite", medicacao: "Creme hidratante", especialidade: "Dermatologia" },
+            { id: 3, nomePaciente: "Carlos Souza", diagnostico: "Fratura no braço", medicacao: "Gesso", especialidade: "Ortopedia" }
+            // Adicione mais dados conforme necessário
+        ];
+
+        // Limpa o conteúdo atual da tabela
+        var corpoTabela = document.getElementById("corpo-tabela-dados");
+        corpoTabela.innerHTML = "";
+
+        // Itera sobre os dados e os insere na tabela
+        for (var i = 0; i < dados.length; i++) {
+            var consulta = dados[i];
+            var newRow = "<tr>" +
+                "<td>" + consulta.id + "</td>" +
+                "<td>" + consulta.nomePaciente + "</td>" +
+                "<td>" + consulta.diagnostico + "</td>" +
+                "<td>" + consulta.medicacao + "</td>" +
+                "<td>" + consulta.especialidade + "</td>" +
+                "<td><button class='fas fa-book-medical btn-prontuario' onclick='abrirProntuario(" + consulta.id + ")'></button></td>" +
+                "</tr>";
+            corpoTabela.innerHTML += newRow;
+        }
+    }
+
+    // Simula a obtenção dos dados da consulta após o carregamento da página
+    obterDadosConsulta();
+</script>
+
+<!-- Inicio da função de enviar informações do formulario -->
 
 <!-- <script>
-    $(document).ready(function(){
-        // Faz uma solicitação AJAX para obter os dados do servidor
-        $.ajax({
-            url: 'seu_servidor_dados.php', // Substitua pelo URL do seu servidor e endpoint para obter os dados
-            method: 'GET',
-            dataType: 'json',
-            success: function(data){
+    // Função para carregar os dados da consulta do servidor
+    function carregarDadosConsulta() {
+        fetch('/consultas')
+            .then(response => response.json())
+            .then(data => {
                 // Limpa o conteúdo atual da tabela
-                $('#corpo-tabela-dados').empty();
-                // Itera sobre os dados recebidos e os insere na tabela
-                $.each(data, function(index, item){
-                    var row = $('<tr>');
-                    row.append($('<td>').text(item.data));
-                    row.append($('<td>').text(item.hora));
-                    row.append($('<td>').text(item.status));
-                    row.append($('<td>').text(item.nomeMedico));
-                    row.append($('<td>').text(item.nomePaciente));
-                    row.append($('<td>').text(item.especialidade));
-                    $('#corpo-tabela-dados').append(row);
+                var corpoTabela = document.getElementById("corpo-tabela-dados");
+                corpoTabela.innerHTML = "";
+
+                // Itera sobre os dados e os insere na tabela
+                data.forEach(consulta => {
+                    var newRow = "<tr>" +
+                                    "<td>" + consulta.id + "</td>" +
+                                    "<td>" + consulta.nomePaciente + "</td>" +
+                                    "<td>" + consulta.diagnostico + "</td>" +
+                                    "<td>" + consulta.medicacao + "</td>" +
+                                    "<td>" + consulta.especialidade + "</td>" +
+                                    "<td><button class='fas fa-book-medical btn-prontuario' onclick='abrirProntuario(" + consulta.id + ")'></button></td>" +
+                                "</tr>";
+                    corpoTabela.innerHTML += newRow;
                 });
-            },
-            error: function(){
-                console.log('Erro ao obter os dados do servidor.');
-            }
-        });
-    });
-    </script>
-     -->
+            })
+            .catch(error => console.error('Erro ao carregar os dados da consulta:', error));
+    }
+
+    // Carrega os dados da consulta automaticamente após o carregamento da página
+    window.onload = carregarDadosConsulta;
+</script> -->
+
 <!-- Fim da função de enviar informações do formulario -->
+
+
+<!-- Seção do rodapé -->
+<section class="footer">
+    <div class="credit">Criado por <span>Breaking Medical Clinic.</span> | 2024 Todos os direitos reservados</div>
+</section>
+<!-- Fim da seção do rodapé -->
+
+<!-- Link para o arquivo de JavaScript personalizado -->
+<script src="../js/visualizaConsultaMedico.js"></script>

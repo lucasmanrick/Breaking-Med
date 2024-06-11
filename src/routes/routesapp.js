@@ -86,6 +86,10 @@ router.get('/home', redirecionamentoControllers.direcionamentoHome )
 //login
 router.get('/login', redirecionamentoControllers.direcionamentoLogin) // abre pagina de login
 router.post('/login',pessoaControllers.verificaEntrada) // verifica se o login passado existe e retorna token para ter acesso ao site.
+//nao renderiza o footer e o header 
+router.get('/minhapagina', (req, res) => {
+  res.render('minhapagina', { excludeLayout: true });
+});
 
 
 
