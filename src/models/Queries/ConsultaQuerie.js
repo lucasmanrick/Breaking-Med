@@ -118,10 +118,12 @@ const QuerieConsulta = {
           const promessasConsultas = returnMessage.moreInfos.map(async (el) => {
             el.status = 'ativo';
             const pegaNomeMedicoEEspecialidade = await conn.query('select p.nome as nomePaciente, p.cpf as cpfPaciente,c.data as dataConsulta,c.hora as horaConsulta, c.status as statusConsulta from tbl_pessoa as p join tbl_paciente as pac on pac.pessoa_id=p.id join tbl_consulta as c on pac.pessoa_id=c.id ');
+            const pegaProntuarioConsulta = await conn.query('select id as idPront,medicacao,diagnostico from tbl_prontuario where consulta_id=?',[el.idConsulta])
             el.dadosPaciente = pegaNomeMedicoEEspecialidade[0][0];
             el.dadosPaciente.funcionario_id = el.funcionario_id
             el.dadosPaciente.funcionario_pessoa_id = el.funcionario_pessoa_id
             el.dadosPaciente.especialidade_id = el.especialidade_id;
+            el.dadosProntuario = pegaProntuarioConsulta[0][0]
   
             delete el.funcionario_id;
             delete el.funcionario_pessoa_id;
@@ -147,7 +149,20 @@ const QuerieConsulta = {
     } else {
       return { consultaMessage: `a solicitação foi enviada porem nenhum agendamento foi alterado, por favor tente novamente`, result: false }
     }
+  },
 
+  updateDadosProntuário:async (prontObj) => {
+    const conn = await connection();
+    try{
+      let returnUpdateStatment;
+      if(prontObj.diagnostico !== '' && prontObj.medicacao !== '') {
+        returnUpdateStatment = conn.query('UPDATE tbl_prontuario set diagnostico=? AND medicacao=? WHERE id=?',[prontObj.diagnostico,prontObj.medicacao,prontObj.id])
+      }
+    }
+    catch(e) {
+      console.log(e)
+    }
+   
   }
 }
 

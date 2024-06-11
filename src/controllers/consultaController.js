@@ -1,12 +1,9 @@
 const Pessoa = require('../models/Classes/PessoaClass');
 const Consulta = require('../models/Classes/consultaClass');
-const {registraNovaConsulta} = require('../models/Queries/ConsultaQuerie');
-const {retornaConsultaDePacienteLogado} = require('../models/Queries/ConsultaQuerie'); 
-const {retornaConsultaDeMedicoLogado} = require('../models/Queries/ConsultaQuerie'); 
-const {cancelaAgendamentoConsulta} = require('../models/Queries/ConsultaQuerie');
+const Prontuario = require('../models/Classes/prontuarioClass');
+const {registraNovaConsulta,retornaConsultaDePacienteLogado,retornaConsultaDeMedicoLogado,cancelaAgendamentoConsulta,retornaConsultasAdm,retornaEspecialidadesEFuncionarioVinculado,updateDadosProntuário} = require('../models/Queries/ConsultaQuerie');
 const {verificaExistenciaDeUmUsuario} = require('../models/Queries/PessoaQuerie');
-const {retornaConsultasAdm} = require ('../models/Queries/ConsultaQuerie');
-const {retornaEspecialidadesEFuncionarioVinculado} = require('../models/Queries/ConsultaQuerie')
+
 
 const consultaController = {
 
@@ -77,19 +74,32 @@ const consultaController = {
   },
 
   cancelaConsulta: async (req,res) => {
-    const idDaConsulta = req.headers['idconsulta'];
-    console.log(req.headers)
-    if(!idDaConsulta) {
-      res.json({consultaMessage:'o id da consulta não chegou corretamente ao servidor, tente novamente!',result:false})
-      return
-    } 
+    try {
+      const idDaConsulta = req.headers['idconsulta'];
+      console.log(req.headers)
+      if(!idDaConsulta) {
+        res.json({consultaMessage:'o id da consulta não chegou corretamente ao servidor, tente novamente!',result:false})
+        return
+      } 
+    } catch (e) {
+      console.log(e)
+    }
+    
 
    res.json(await cancelaAgendamentoConsulta(idDaConsulta))
   },
 
   preencheProntuario: async (req,res) => {
-    const {diagnostico,medicacao} = req.body;
-    const {consulta_id,consulta_paciente_id,consulta_paciente_pessoa_id,consulta_funcionario_id,consulta_funcionario_pessoa_id} = req.body
+    try {
+      const {diagnostico,medicacao} = req.body;
+      const {idPront} = req.body;
+  
+      const instanciaPront = new Prontuario(idPront,diagnostico,medicacao)
+  
+      const sendReceiveUpdate = updateDadosProntuário(instanciaPront)
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 
