@@ -4,33 +4,46 @@
   <div class="div-titles">
     <h3>Agendamento de Consulta</h3>
   </div>
-  <h5 id="Nomeh5">Nome do Médico:</h5>
-  <h5 id="Especialidadeh5">Especialidade do Médico:</h5>
-  <h5 id="Horarioh5">Horário da consulta:</h5>
-  <h5 id="Datah5">Data da consulta:</h5>
-
-
-
-
-
   <input placeholder="CPF do cliente" type="text" required id="CPF">
 
   <div class="formstotal">
 
-    <form class="forms" action="/">
-      <select class="form-control" name="Nome" id="Nome">
-      </select>
-      <select class="form-control" name="Especialidade" id="Especialidade">
-        <option value="1">Medico Geral</option>
-        <option value="2">Pediatra</option>
-        <option value="3">Cardiologista</option>
-      </select>
+    <form class="forms" action="">
+
+
+      <div id="selectNome">
+        <label for="Nome" id="labelNome">Nome do Médico:</label>
+        <select class="form-control" la name="Nome" id="Nome">
+          <option value="1">Gustavo</option>
+          <option value="2">Lucas</option>
+          <option value="3">Kevin</option>
+        </select>
+      </div>
+
+
+      <div id="selectEspecialidade">
+        <label for="Especialidade" id="Lanel">Especialidade do Médico:</label>
+
+        <select class="form-control" name="Especialidade" id="Especialidade">
+
+          <option value="1">Medico Geral</option>
+          <option value="2">Pediatra</option>
+          <option value="3">Cardiologista</option>
+        </select>
+      </div>
     </form>
 
     <div class="input-container">
-      <input placeholder="Hora" type="text" required id="Hora">
-      <input placeholder="Data" type="text" required id="Data">
 
+      <div id="divHora">
+        <label for="Horinha" id="Horinha">Hora da consulta:</label>
+        <input placeholder="Hora" name="Horinha" type="text" required id="Hora">
+      </div>
+
+      <div id="Datinha">
+        <label for="Datinha">Data da consulta:</label>
+        <input placeholder="Data" name="Datinha" lang="text" required id="Data">
+      </div>
     </div>
 
   </div>
@@ -44,41 +57,43 @@
   </div>
 
 
-  <script>
-    const dataUser = JSON.parse(sessionStorage.getItem('userData'))
-    const token = dataUser.token
+</div>
 
-    fetch('/DadosParaRegistroConsulta', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: token
+<script>
+  const dataUser = JSON.parse(sessionStorage.getItem('userData'))
+  const token = dataUser.token
+
+  fetch('/DadosParaRegistroConsulta', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: token
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.result === false) {
+        alert("não foi possivel retornar as especializações disponiveis para registro erro:", data.cadastroMessage)
+        return
+      } else if (data.auth === false) {
+        alert('usuario deslogado, logue novamente para continuar')
+        window.location = '/login'
       }
+      sessionStorage.setItem("especialidadesToConsulta", JSON.stringify(data));
     })
-      .then(response => response.json())
-      .then(data => {
-        if (data.result === false) {
-          alert("não foi possivel retornar as especializações disponiveis para registro erro:", data.cadastroMessage)
-          return
-        } else if (data.auth === false) {
-          alert('usuario deslogado, logue novamente para continuar')
-          window.location = '/login'
-        }
-        sessionStorage.setItem("especialidadesToConsulta", JSON.stringify(data));
-      })
-      .catch(error => {
-        console.error('Erro:', error);
-      });
+    .catch(error => {
+      console.error('Erro:', error);
+    });
 
 
-      const selectEspecialidade = document.getElementById('Especialidade')
+  const selectEspecialidade = document.getElementById('Especialidade')
 
-      const receiveEspecialities = sessionStorage.getItem("especialidadesToConsulta")
-      receiveEspecialities.moreInfos.forEach(e => {
-        const createNewOption = document.createElement('option')
-        createNewOption.value = `${e.funcionario_id}`;
-        createNewOption.innerText = `${e.desc_especialidade}`
-      })
-      selectEspecialidade.appendChild()
+  const receiveEspecialities = sessionStorage.getItem("especialidadesToConsulta")
+  receiveEspecialities.moreInfos.forEach(e => {
+    const createNewOption = document.createElement('option')
+    createNewOption.value = `${e.funcionario_id}`;
+    createNewOption.innerText = `${e.desc_especialidade}`
+  })
+  selectEspecialidade.appendChild()
 
-  </script>
+</script>
