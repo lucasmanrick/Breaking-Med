@@ -2,9 +2,7 @@ const Pessoa = require('../models/Classes/PessoaClass');
 const Endereco = require('../models/Classes/enderecoClass')
 const Perfis = require ('../models/Classes/perfisClass')
 const Consulta = require ('../models/Classes/consultaClass')
-const {novoRegistroPessoa} = require('../models/Queries/PessoaQuerie');
-const {retornaEspecialidade} = require('../models/Queries/PessoaQuerie');
-const {logandoCliente} = require('../models/Queries/PessoaQuerie')
+const {novoRegistroPessoa,retornaEspecialidade,logandoCliente,retornaFuncionarioComDeDeterminadaEspecialidade} = require('../models/Queries/PessoaQuerie'); 
 const Login = require('../models/Classes/loginClass');
 const Telefone = require('../models/Classes/telefoneClass');
 const Funcionario = require('../models/Classes/funcionarioClass');
@@ -99,6 +97,18 @@ const pessoaControllers = {
   },
 
 
+  retornaNomeMedicoComBaseNaEspecialidade: async (req,res) => {
+    const idEspecialidade = parseInt(req.headers['idespecialidade'])
+
+      try{
+       res.json(await retornaFuncionarioComDeDeterminadaEspecialidade(idEspecialidade))
+      }
+      catch(e) {
+        console.log(e)
+        return{funcionarioReturn:'falha ao retornar dados do medico', result:false}
+      }
+
+  }
   
 
 }

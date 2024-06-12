@@ -26,7 +26,7 @@
   <input type="date" name="dataAdmissao" id="dataAdmissao" placeholder="Data Admissao">
   <input type="number" name="crm" id="crm" placeholder="Crm">
   <select name="especialidadeParaRegistro" id="especialidadeParaRegistro">
-    
+
   </select>
 
   <button type="submit">Enviar</button>
@@ -58,38 +58,40 @@
         window.location = '/login'
       }
       sessionStorage.setItem("especialidadesToRegister", JSON.stringify(data));
+
+      const especialidadeExiste = sessionStorage.getItem('especialidadesToRegister')
+      if (!especialidadeExiste) {
+        const dataAdmissaoBtn = document.getElementById('dataAdmissao')
+        const crmBtn = document.getElementById('crm')
+
+
+        document.getElementById('cadastro').removeChild(dataAdmissaoBtn)
+        document.getElementById('cadastro').removeChild(crmBtn)
+      } else {
+        const especialidadeParaRegistro = document.getElementById('especialidadeParaRegistro')
+
+        let htmlInsert = ``
+
+        const parseEspec = JSON.parse(especialidadeExiste)
+
+        if (parseEspec.moreInfos !== undefined) {
+          parseEspec.moreInfos.forEach(e => {
+            const optionToChoose = document.createElement('option')
+            optionToChoose.value = `${e.id}`
+            optionToChoose.innerText = `${e.desc_especialidade}`
+            especialidadeParaRegistro.appendChild(optionToChoose)
+          })
+        }
+      }
+
+
+
     })
     .catch(error => {
       console.error('Erro:', error);
     });
 
 
-  const especialidadeExiste = sessionStorage.getItem('especialidadesToRegister')
-  if (!especialidadeExiste) {
-    const dataAdmissaoBtn = document.getElementById('dataAdmissao')
-    const crmBtn = document.getElementById('crm')
-
-
-    document.getElementById('cadastro').removeChild(dataAdmissaoBtn)
-    document.getElementById('cadastro').removeChild(crmBtn)
-  }else {
-    const especialidadeParaRegistro = document.getElementById('especialidadeParaRegistro')
-
-    let htmlInsert = ``
-
-    const parseEspec = JSON.parse(especialidadeExiste)
-
-    if(parseEspec.moreInfos !== undefined) {
-      parseEspec.moreInfos.forEach(e => {
-      const optionToChoose = document.createElement('option')
-      optionToChoose.value = `${e.id}`
-      optionToChoose.innerText = `${e.desc_especialidade}`
-      especialidadeParaRegistro.appendChild(optionToChoose)
-    })
-    }
-  }
-
-  
 
   document.getElementById('cadastro').addEventListener('submit', (e) => {
     e.preventDefault()
@@ -141,7 +143,7 @@
       .then(response => response.json())
       .then(data => {
         if (data.result === false) {
-          alert("algo deu errado durante o registro do usuario, por favor tente novamente!")
+          alert("algo deu errado durante o registro do usuario, por favor tente novamente!", data.result)
           return
         } else if (data.auth === false) {
           alert('usuario deslogado, logue novamente para continuar')

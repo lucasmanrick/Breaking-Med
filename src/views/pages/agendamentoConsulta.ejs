@@ -9,21 +9,13 @@
   <h5 id="Horarioh5">Horário da consulta:</h5>
   <h5 id="Datah5">Data da consulta:</h5>
 
-
-
-
-
-  <input placeholder="CPF do cliente" type="text" required id="CPF">
-
   <div class="formstotal">
 
-    <form class="forms" action="/">
+    <form class="forms" id="form" action="">
+      <input placeholder="CPF do cliente" type="text" required name="CPF" id="CPF">
       <select class="form-control" name="Nome" id="Nome">
       </select>
-      <select class="form-control" name="Especialidade" id="Especialidade">
-        <option value="1">Medico Geral</option>
-        <option value="2">Pediatra</option>
-        <option value="3">Cardiologista</option>
+      <select class="form-control Especialidade" name="Especialidade" id="Especialidade">
       </select>
     </form>
 
@@ -65,20 +57,130 @@
           window.location = '/login'
         }
         sessionStorage.setItem("especialidadesToConsulta", JSON.stringify(data));
+
+        const selectEspecialidade = document.getElementById('Especialidade')
+
+        const receiveEspecialities = JSON.parse(sessionStorage.getItem("especialidadesToConsulta"))
+
+        const receiveAllOptions = document.getElementsByTagName('Option')
+        console.log(receiveAllOptions.length)
+
+
+        receiveEspecialities.moreInfos.forEach(e => {
+          let verificaNecessidade = true;
+          for (let i = 0; i < receiveAllOptions.length; i++) {
+            console.log(receiveAllOptions[i].attributes.value.value)
+            if (e.especialidade_id == receiveAllOptions[i].attributes.value.value) {
+              console.log(`ja tem ${e.desc_especialidade} inserido no select`)
+              verificaNecessidade = false
+              return
+            }
+          }
+          if (verificaNecessidade === true) {
+            const createNewOption = document.createElement('option')
+            createNewOption.value = `${e.especialidade_id}`;
+            createNewOption.innerText = `${e.desc_especialidade}`
+            selectEspecialidade.appendChild(createNewOption)
+          }
+
+        })
+
+        selectEspecialidade.addEventListener('change', (ev) => {
+          const seletor = document.getElementsByClassName('Especialidade')[0]
+          const valorSelecionado = seletor.value
+
+
+          fetch('/MedicoComEspecialidadeEspecifica', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              authorization: token,
+              idEspecialidade: valorSelecionado
+            }
+          }).then(response => response.json())
+            .then(data => {
+              if (data.result === true) {
+                const selectNames = document.getElementById("Nome")
+                selectNames.innerHTML = ''
+                const allOptionsAttVerify = document.getElementsByTagName('Option')
+
+                data.moreInfos.forEach(dataWorker => {
+                  let secondVerifyNecessity = true
+                  for (let i = 0; i < allOptionsAttVerify.length; i++) {
+                    if (dataWorker.funcionario_id == allOptionsAttVerify[i].attributes.value.value) {
+                      console.log(`o usuario ${dataWorker.nome} ja está inserido no select name`)
+                      secondVerifyNecessity = false
+                      return
+                    }
+                  }
+
+                  if (secondVerifyNecessity === true) {
+                    const createNewOption = document.createElement('option')
+                    createNewOption.value = `${dataWorker.funcionario_id}`;
+                    createNewOption.innerText = `${dataWorker.nome}`
+                    selectNames.appendChild(createNewOption)
+                  }
+                })
+              }
+
+            })
+
+        });
+        // const conceptName = box.options[box.selectedIndex].text;
+
+        // receiveEspecialities.moreInfos.forEach()
       })
       .catch(error => {
         console.error('Erro:', error);
       });
 
+    document.getElementById('form').addEventListener("submit", (e) => {
+      e.preventDefault();
+    })
 
-      const selectEspecialidade = document.getElementById('Especialidade')
+    let infosSearched={}
 
-      const receiveEspecialities = sessionStorage.getItem("especialidadesToConsulta")
-      receiveEspecialities.moreInfos.forEach(e => {
-        const createNewOption = document.createElement('option')
-        createNewOption.value = `${e.funcionario_id}`;
-        createNewOption.innerText = `${e.desc_especialidade}`
+    document.getElementById('Agendar').addEventListener('click',e => {
+      const selectNames = document.getElementById("Nome")
+      selectNames.innerHTML = ''
+      const allOptionsAttVerify = document.getElementsByTagName('Option')
+
+    
+        const seletor = document.getElementsByClassName('Especialidade')[0]
+        const especialidade_id = parseInt(seletor.value)
+
+
+        const cpfPaciente = document.getElementById('CPF').value
+        const data = document.getElementById('Data').value
+        const hora = document.getElementById('Hora').value
+        const funcionario_id = parseInt(allOptionsAttVerify)
+
+
+        const receiveEspecialities = JSON.parse(sessionStorage.getItem("especialidadesToConsulta"))
+
+        receiveEspecialities.moreInfos.forEach(e => {
+          if (e.funcionario_id === funcionario_id && e.especialidade_id === especialidade_id) {
+            infosSearched.funcionario_pessoa_id = e.funcionario_pessoa_id
+          }
+
       })
-      selectEspecialidade.appendChild()
 
+
+        fetch('/NovaConsulta', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: token
+          },
+          body: {
+            data:data,
+            hora:hora,
+            status:status,
+            cpfPaciente:cpfPaciente,
+            funcionario_id:funcionario_id,
+            funcionario_pessoa_id:infosSearched.funcionario_pessoa_id,
+            especialidade_id:especialidade_id
+          }
+        })
+      })
   </script>

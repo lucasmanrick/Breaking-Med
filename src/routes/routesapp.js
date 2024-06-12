@@ -59,6 +59,7 @@ router.post('/RegistroUsuario',verifyJWT ,pessoaControllers.registroDeUsuario) /
 // rotas para registro de consulta-ADM
 router.get('/NovaConsulta', redirecionamentoControllers.direcionamentoAgendamentoConsulta)
 router.get('/DadosParaRegistroConsulta',verifyJWT, consultaController.retornaEspecialidadesEFuncionario) //abre a pagina e retorna todas especialidades e os funcionarios vinculados a ela para conseguirmos agendar uma consulta.
+router.get('/MedicoComEspecialidadeEspecifica', verifyJWT, pessoaControllers.retornaNomeMedicoComBaseNaEspecialidade) // retorna os funcionarios que tem uma determinada especialidade
 router.post('/NovaConsulta' ,verifyJWT,consultaController.novaConsulta) //para o administrador agendar uma nova consulta passamos essa rota no formulario
 
 // rotas para cancelamento de consulta-ADM
@@ -70,7 +71,7 @@ router.put('/Consulta',verifyJWT,consultaController.cancelaConsulta)//para cance
 
 //updateDeProntuario 
 
-router.put('/Prontuario', verifyJWTMedico, consultaController.preencheProntuario)
+router.put('/Prontuario', verifyJWTMedico, consultaController.preencheProntuario) //atualiza dados no prontuario
 
 
 // pagina de visualização de consulta de medico

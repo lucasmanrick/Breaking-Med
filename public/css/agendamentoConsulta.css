@@ -210,22 +210,10 @@ h3{
 
 
 #CPF{
-    width: 280px;
-    height: 65px;
-    font-size: 14px;
     color: #000000;
     background-color: #2a4b62  ;
-    border: none;
-    outline: none;
+    padding: 12px;
     border-radius: 10px;
-    color: #D3D3D3;
-   Bottom: 100px;
-    transition: ease-in-out 0.4s;
-    border: 2px solid #000000; /* Borda sutil */
-    border-radius: 7px; /* Bordas arredondadas */
-    margin-top: 46px;
-    padding-left: 9px;
-
 }
 
 

@@ -131,6 +131,24 @@ const QuerysPessoa = {
     }
   },
 
+  retornaFuncionarioComDeDeterminadaEspecialidade: async (idEspecialidade=0) => {
+    const conn = await connection();
+    try {
+      console.log(idEspecialidade)
+     
+      if(idEspecialidade !== 0 && typeof(idEspecialidade) === 'number') {
+        const funcionarioReturn = await conn.query('select p.nome, the.funcionario_id as funcionario_id from tbl_pessoa as p join tbl_funcionario_has_tbl_especialidade as the on the.funcionario_pessoa_id=p.id WHERE the.especialidade_id=?;',[idEspecialidade])
+        console.log(funcionarioReturn)
+        return {funcionarioReturn:'retornando funcionarios que tem a especialidade solicitada', result:true, moreInfos:funcionarioReturn[0]}
+      }else {
+        return {funcionarioReturn:'não foi possivel fazer retorno de funcionario com base na especialidade pois o parametro não é compativel',result:false}
+      }
+     
+    }catch(e) {
+      console.log(e)
+    }
+  },
+
   logandoCliente: async (loginObj) => {
     const conn = await connection();
     try {
