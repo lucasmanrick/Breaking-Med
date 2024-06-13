@@ -31,22 +31,19 @@ const consultaController = {
 
   novaConsulta: async (req, res) => {
     try {
-      const { data, hora, status, cpfPaciente, funcionario_id, funcionario_pessoa_id, especialidade_id } = req.body;
+      const { data, hora, cpfPaciente, funcionario_id, funcionario_pessoa_id, especialidade_id } = req.body;
 
+      console.log(funcionario_pessoa_id)
       const verificaExistenciaPaciente = await verificaExistenciaDeUmUsuario(cpfPaciente)
-      let consultaObj;
 
-
-      console.log(verificaExistenciaPaciente)
       if (verificaExistenciaPaciente.result === true) {
-        consultaObj = new Consulta(null, data, hora, status, verificaExistenciaPaciente.moreInfos.pac_id, verificaExistenciaPaciente.moreInfos.id, funcionario_id, funcionario_pessoa_id, especialidade_id)
+       const consultaObj = new Consulta(null, data, hora,1, verificaExistenciaPaciente.moreInfos.pac_id, verificaExistenciaPaciente.moreInfos.id, funcionario_id, funcionario_pessoa_id, especialidade_id)
+        res.json(await registraNovaConsulta(consultaObj))
       } else {
         res.json(verificaExistenciaPaciente)
         return
       }
 
-
-      res.json(await registraNovaConsulta(consultaObj))
     }
     catch (e) {
       res.json({ consultaMessage: 'não foi possivel registrar consulta tente novamente.', result: false })

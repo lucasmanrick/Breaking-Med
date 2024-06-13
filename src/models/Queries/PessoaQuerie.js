@@ -7,11 +7,9 @@ const QuerysPessoa = {
   // QUERYS DE REGISTROS DE PESSOA
 
   async verificaExistenciaDeUmUsuario(cpf) { //retorna todos clientes registrados. não esta sendo utilizado.
+    const conn = await connection();
     try {
-      const conn = await connection();
-      console.log(cpf)
       const result = await conn.query('select p.*, pac.id as pac_id from tbl_pessoa as p join tbl_paciente as pac on pac.pessoa_id=p.id where p.cpf=?;',[cpf]);
-      console.log(result)
       if(result[0].length === 0) {
         return {consultaMessage:'o CPF informado não possui um cadastro, por favor tente novamente',result:false}
       }else {
@@ -137,7 +135,7 @@ const QuerysPessoa = {
       console.log(idEspecialidade)
      
       if(idEspecialidade !== 0 && typeof(idEspecialidade) === 'number') {
-        const funcionarioReturn = await conn.query('select p.nome, the.funcionario_id as funcionario_id from tbl_pessoa as p join tbl_funcionario_has_tbl_especialidade as the on the.funcionario_pessoa_id=p.id WHERE the.especialidade_id=?;',[idEspecialidade])
+        const funcionarioReturn = await conn.query('select p.nome, the.funcionario_id as funcionario_id, the.funcionario_pessoa_id from tbl_pessoa as p join tbl_funcionario_has_tbl_especialidade as the on the.funcionario_pessoa_id=p.id WHERE the.especialidade_id=?;',[idEspecialidade])
         console.log(funcionarioReturn)
         return {funcionarioReturn:'retornando funcionarios que tem a especialidade solicitada', result:true, moreInfos:funcionarioReturn[0]}
       }else {
