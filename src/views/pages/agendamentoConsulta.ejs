@@ -20,9 +20,16 @@
     </form>
 
     <div class="input-container">
-      <input placeholder="Hora" type="text" required id="Hora">
-      <input placeholder="Data" type="text" required id="Data">
 
+      <div id="divHora">
+        <label for="Horinha" id="Horinha">Hora da consulta:</label>
+        <input placeholder="Hora" name="Horinha" type="text" required id="Hora">
+      </div>
+
+      <div id="Datinha">
+        <label for="Datinha">Data da consulta:</label>
+        <input placeholder="Data" name="Datinha" lang="text" required id="Data">
+      </div>
     </div>
 
   </div>
@@ -36,9 +43,11 @@
   </div>
 
 
-  <script>
-    const dataUser = JSON.parse(sessionStorage.getItem('userData'))
-    const token = dataUser.token
+</div>
+
+<script>
+  const dataUser = JSON.parse(sessionStorage.getItem('userData'))
+  const token = dataUser.token
 
     fetch('/DadosParaRegistroConsulta', {
       method: 'GET',
