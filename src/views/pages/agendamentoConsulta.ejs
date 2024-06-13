@@ -23,7 +23,7 @@
 
       <div id="divHora">
         <label for="Horinha" id="Horinha">Hora da consulta:</label>
-        <input placeholder="Hora" name="Horinha" type="text" required id="Hora">
+        <input placeholder="Hora" name="hora" type="text" required id="Hora">
       </div>
 
       <div id="Datinha">
@@ -46,8 +46,8 @@
 </div>
 
 <script>
-  const dataUser = JSON.parse(sessionStorage.getItem('userData'))
-  const token = dataUser.token
+   const dataUser = JSON.parse(sessionStorage.getItem('userData'))
+    const token = dataUser.token
 
     fetch('/DadosParaRegistroConsulta', {
       method: 'GET',
@@ -195,7 +195,7 @@
         })
       }).then(response => response.json())
         .then(data => {
-          console.log(data)
+          alert(data.consultaMessage)
         }).catch (e => {
           console.log(e)
         })
