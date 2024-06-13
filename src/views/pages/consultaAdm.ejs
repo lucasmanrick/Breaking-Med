@@ -11,6 +11,7 @@
         <th>Nome do Paciente</th>
         <th>Medico</th>
         <th>Especialidade Médica</th>
+        <th>Cancelamento de consulta</th>
       </tr>
     </thead>
     <tbody id="corpo-tabela-dados">
@@ -35,6 +36,26 @@
 <!-- Fim da seção da tabela de dados -->
 
 <script defer>
+
+function cancelaConsulta(idConsulta) {
+      alert('clicou em cancelar')
+      fetch('/Consulta', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: token,
+        idconsulta:idConsulta
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+       alert(data.consultaMessage)
+      })
+      .catch(error => {
+        // Lidar com o erro
+        console.error('Erro:', error);
+      });
+    }
   
   const dataUser = JSON.parse(sessionStorage.getItem('userData'))
   const token = dataUser.token
@@ -51,20 +72,54 @@
       const tableReceiver = document.getElementById('corpo-tabela-dados')
 
      data.moreInfos.forEach (e => {
-      tableReceiver.innerHTML += ` 
-      <tr>
-        <td>${e.id}</td>
-        <td>${e.data}</td>
-        <td>${e.hora}</td>
-        <td>${e.paciente_nome}</td>
-        <td>${e.funcionario_nome}</td>
-        <td>${e.desc_especialidade}</td>
-      </tr>`
+      const linha= document.createElement('tr')
+      const colunaId = document.createElement('td')
+      colunaId.innerText = `${e.id}`
+      const colunaData = document.createElement('td')
+      colunaData.innerText = `${e.data}`
+      const colunaHora = document.createElement('td')
+      colunaHora.innerText = `${e.hora}`
+      const colunaPacienteNome = document.createElement('td')
+      colunaPacienteNome.innerText = `${e.paciente_nome}`
+      const colunaFuncionarioNome = document.createElement('td')
+      colunaFuncionarioNome.innerText = `${e.funcionario_nome}`
+      const colunaEspecialidade = document.createElement('td')
+      colunaEspecialidade.innerText = `${e.desc_especialidade}`
+      const colunaButtonContent = document.createElement('td')
+      const buttonConsultaCancel = document.createElement('button')
+      buttonConsultaCancel.innerText='Cancelar Consulta'
+      buttonConsultaCancel.style.cursor = 'pointer'
+      buttonConsultaCancel.style.padding = '15px'
+      buttonConsultaCancel.addEventListener('click', (ev) => {
+        const confirmMessage = confirm('Você tem certeza que deseja cancelar a consulta do paciente' + " " + e.paciente_nome + "?")
+        if(confirmMessage === true) {
+          cancelaConsulta(e.id)
+        }
+      })
+
+      colunaButtonContent.append(buttonConsultaCancel)
+      linha.append(colunaId,colunaData,colunaHora,colunaPacienteNome,colunaFuncionarioNome,colunaEspecialidade,colunaButtonContent)
+      tableReceiver.appendChild(linha)
+
+
+      // tableReceiver.innerHTML += ` 
+      // <tr>
+      //   <td>${e.id}</td>
+      //   <td>${e.data}</td>
+      //   <td>${e.hora}</td>
+      //   <td>${e.paciente_nome}</td>
+      //   <td>${e.funcionario_nome}</td>
+      //   <td>${e.desc_especialidade}</td>
+      //   <td><button style="padding:30px; cursor:pointer" onPress={cancelaConsulta(${e.id})}>Cancelar Consulta</button></td>
+      // </tr>`
      })
 
     })
     .catch(error => {
       console.error('Erro:', error);
     });
+
+
+    
 
 </script>
