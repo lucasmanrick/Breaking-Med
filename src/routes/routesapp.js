@@ -74,11 +74,12 @@ router.put('/Prontuario', verifyJWTMedico, consultaController.preencheProntuario
 
 
 // pagina de visualização de consulta de medico
-
+router.get('/ConsultaMedicoPage', redirecionamentoControllers.direcionamentoConsultasMedicas)
 router.get('/ConsultasMedico',verifyJWTMedico,consultaController.verificaConsultasMedico)
 
 
 //pagina de visualização consulta de paciente
+router.get('/ConsultaPacientePage', redirecionamentoControllers.direcionamentoConsultasPaciente)
 router.get('/ConsultaPaciente',verifyJWTPaciente,consultaController.verificaConsultasPaciente) //retorna todas consultas do paciente logado
 
 

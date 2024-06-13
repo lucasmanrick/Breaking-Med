@@ -57,9 +57,9 @@
         alert('usuario deslogado, logue novamente para continuar')
         window.location = '/login'
       }
-      if(sessionStorage.getItem("especialidadesToRegister")) {
-          sessionStorage.setItem('especialidadesToRegister','')
-        }
+      if (sessionStorage.getItem("especialidadesToRegister")) {
+        sessionStorage.setItem('especialidadesToRegister', '')
+      }
 
       sessionStorage.setItem("especialidadesToRegister", JSON.stringify(data));
 
@@ -152,6 +152,7 @@
         } else if (data.auth === false) {
           alert('usuario deslogado, logue novamente para continuar')
           window.location = '/login'
+          
         }
         alert('usuario registrado com sucesso')
       })
