@@ -6,21 +6,21 @@
     <thead>
       <tr>
         <th>Consulta ID</th>
-        <th>CPF</th>
+        <th>Data da consulta</th>
+        <th>Hora da consulta</th>
         <th>Nome do Paciente</th>
-        <th>Especialidade</th>
-        <th>Ações</th>
+        <th>Medico</th>
+        <th>Especialidade Médica</th>
       </tr>
     </thead>
     <tbody id="corpo-tabela-dados">
       <!-- Os dados serão inseridos aqui pelo JavaScript -->
-      <tr>
+      <!-- <tr>
         <td>001</td>
         <td>123.456.789-10</td>
         <td>João da Silva</td>
         <td>Dermatologista</td>
         <td><button class="fas fa-trash-alt btn-excluir" onclick="excluirConsulta(1)"></button></td>
-        
       </tr>
       <tr>
         <td>002</td>
@@ -28,20 +28,7 @@
         <td>Marcos Lucas</td>
         <td>Cardiologista</td>
         <td><button class="fas fa-trash-alt btn-excluir" onclick="excluirConsulta(1)"></button></td>
-      </tr>
-      <!-- Inicio da função que talvez possa ser usada para excluir a linha  -->
-      <!-- // Função para excluir uma consulta
-            function excluirConsulta(row) {
-            // Confirme se o usuário deseja realmente excluir a consulta
-            if (confirm("Tem certeza de que deseja excluir esta consulta?")) {
-            // Obtém a referência da linha a ser excluída
-            var rowIndex = row.parentNode.parentNode.rowIndex;
-
-            // Remove a linha da tabela
-            document.getElementById("corpo-tabela-dados").deleteRow(rowIndex);
-            }
-            } -->
-      <!-- Fim da função que talvez possa ser usada para excluir a linha  -->
+      </tr> -->
     </tbody>
   </table>
 </section>
@@ -49,4 +36,35 @@
 
 <script defer>
   
+  const dataUser = JSON.parse(sessionStorage.getItem('userData'))
+  const token = dataUser.token
+    
+  fetch('/Consulta', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: token
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      const tableReceiver = document.getElementById('corpo-tabela-dados')
+
+     data.moreInfos.forEach (e => {
+      tableReceiver.innerHTML += ` 
+      <tr>
+        <td>${e.id}</td>
+        <td>${e.data}</td>
+        <td>${e.hora}</td>
+        <td>${e.paciente_nome}</td>
+        <td>${e.funcionario_nome}</td>
+        <td>${e.desc_especialidade}</td>
+      </tr>`
+     })
+
+    })
+    .catch(error => {
+      console.error('Erro:', error);
+    });
+
 </script>
