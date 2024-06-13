@@ -13,6 +13,10 @@ const redirecionamentoControllers = {
     res.render('pages/agendamentoConsulta')
   },
 
+  direcionamentoCancelamentoConsulta: (req,res) => {
+    res.render('pages/consultaAdm')
+  },
+
   direcionamentoCadastroUsuario: (req,res) => {
     res.render('pages/cadastroPessoa')
   },

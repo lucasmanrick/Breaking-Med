@@ -6,7 +6,7 @@ const QuerieConsulta = {
   async retornaConsultasAdm() {
     const conn = await connection();
     try {
-      const consultas = await conn.query('select * from tbl_consulta where status=1')
+      const consultas = await conn.query('select c.id, c.data,c.hora, p.nome as paciente_nome, func.nome as funcionario_nome, espec.desc_especialidade from tbl_consulta as c join tbl_pessoa as func on func.id=c.funcionario_pessoa_id join tbl_pessoa as p on p.id=c.paciente_pessoa_id join tbl_especialidade as espec on espec.id=c.especialidade_id where c.status=1')
       if (consultas[0].length === 0) {
         return { consultaMessage: 'não foi possivel retornar as consultas, ou não tem consultas a serem retornadas, por favor tente novamente', result: false }
       }

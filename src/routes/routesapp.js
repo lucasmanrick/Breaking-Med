@@ -63,7 +63,7 @@ router.post('/NovaConsulta' ,verifyJWT,consultaController.novaConsulta) //para o
 
 // rotas para cancelamento de consulta-ADM
 
-// router.get('/CancelaConsultaPage', redirecionamentoControllers.)
+router.get('/CancelaConsultaPage', redirecionamentoControllers.direcionamentoCancelamentoConsulta)
 router.get('/Consulta',verifyJWT, consultaController.retornaTodasConsultas) //abre pagina e retorna todas as consultas ativas para posteriormente conseguirmos desfazer o agendamento.
 router.put('/Consulta',verifyJWT,consultaController.cancelaConsulta)//para cancelar um agendamento.
 
