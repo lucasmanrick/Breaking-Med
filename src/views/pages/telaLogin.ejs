@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="css/telaLogin.css">
+<link rel="stylesheet" href="/css/telaLogin.css">
 
 <div class="container">
   <form id="sendForm" class="forms-container" method="post" action="">
@@ -54,6 +54,9 @@
     })
       .then(response => response.json())
       .then(data => {
+        if(sessionStorage.getItem("userData")) {
+          sessionStorage.setItem('userData','')
+        }
         sessionStorage.setItem("userData",JSON.stringify(data));
         console.log('data user', sessionStorage.getItem('userData'))
         window.location = data.redirect;
