@@ -57,6 +57,10 @@
         if(sessionStorage.getItem("userData")) {
           sessionStorage.setItem('userData','')
         }
+        if (data.result === false) {
+          alert(data.loginMessage)
+          return
+        }
         sessionStorage.setItem("userData",JSON.stringify(data));
         console.log('data user', sessionStorage.getItem('userData'))
         window.location = data.redirect;

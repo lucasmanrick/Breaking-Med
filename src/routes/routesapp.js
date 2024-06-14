@@ -80,7 +80,7 @@ router.get('/ConsultasMedico',verifyJWTMedico,consultaController.verificaConsult
 
 //pagina de visualização consulta de paciente
 router.get('/ConsultaPacientePage', redirecionamentoControllers.direcionamentoConsultasPaciente)
-router.get('/ConsultaPaciente',verifyJWTPaciente,consultaController.verificaConsultasPaciente) //retorna todas consultas do paciente logado
+router.get('/ConsultasPaciente',verifyJWTPaciente,consultaController.verificaConsultasPaciente) //retorna todas consultas do paciente logado
 
 
 //home

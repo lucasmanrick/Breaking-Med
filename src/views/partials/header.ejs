@@ -20,7 +20,8 @@
 
 <script>
 
-  if (sessionStorage.getItem('userData') !== 'null') {
+  if (sessionStorage.getItem('userData') !== null) {
+  
     const dataUser = JSON.parse(sessionStorage.getItem('userData'))
     const navbar = document.getElementById('headerNavBar')
     if (dataUser.moreInfos.tipo === 'administrador') {

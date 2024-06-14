@@ -53,6 +53,7 @@ const consultaController = {
 
   verificaConsultasPaciente: async (req, res) => {
     const idPessoa = req.headers['idpessoa']  //o id recebido aki é o do paciente
+    console.log('entrou')
     if (idPessoa) {
       const recebeConsultas = new Pessoa(idPessoa)
       res.json(await retornaConsultaDePacienteLogado(recebeConsultas))
@@ -63,7 +64,7 @@ const consultaController = {
   },
 
   verificaConsultasMedico: async (req, res) => {
-    const idFuncionario = req.headers['idFuncionario']
+    const idFuncionario = req.headers['idfuncionario']
     if (idFuncionario) {
       const recebeConsultas = new Pessoa(idFuncionario)
       res.json(await retornaConsultaDeMedicoLogado(recebeConsultas))

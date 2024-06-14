@@ -7,102 +7,21 @@
             <tr>
                 <th>Consulta ID</th>
                 <th>Nome do Paciente</th>
-                <th>Diagnóstico</th>
-                <th>Medicação</th>
-                <th>Especialidade</th>
-                <th>Ações</th>
+                <th>CPF</th>
+                <th>Data da Consulta</th>
+                <th>Horario da Consulta</th>
+                <!-- <th>Ações</th> -->
             </tr>
         </thead>
         <tbody id="corpo-tabela-dados">
             <!-- Os dados serão inseridos aqui pelo JavaScript -->
-            <tr>
-                <td>001</td>
-                <td>João da Silva</td>
-                <td>Gripe</td>
-                <td>Paracetamol</td>
-                <td>Clínico Geral</td>
-                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
-            </tr>
-            <tr>
-                <td>002</td>
-                <td>Maria Oliveira</td>
-                <td>Dermatite</td>
-                <td>Creme hidratante</td>
-                <td>Dermatologia</td>
-                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
-            </tr>
-            <tr>
-                <td>003</td>
-                <td>Carlos Souza</td>
-                <td>Fratura no braço</td>
-                <td>Gesso</td>
-                <td>Ortopedia</td>
-                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
-            </tr>
-            <tr>
-                <td>004</td>
-                <td>Ana Costa</td>
-                <td>Exame de rotina</td>
-                <td>---</td>
-                <td>Ginecologia</td>
-                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
-            </tr>
-            <tr>
-                <td>005</td>
-                <td>Pedro Fernandes</td>
-                <td>Tosse persistente</td>
-                <td>Xarope para tosse</td>
-                <td>Pediatria</td>
-                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
-            </tr>
-            <tr>
-                <td>006</td>
-                <td>Juliana Santos</td>
-                <td>Arritmia cardíaca</td>
-                <td>Medicação para controle do ritmo cardíaco</td>
-                <td>Cardiologia</td>
-                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
-            </tr>
-            <tr>
-                <td>007</td>
-                <td>Luisa Rodrigues</td>
-                <td>Exame de vista</td>
-                <td>---</td>
-                <td>Oftalmologia</td>
-                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
-            </tr>
-            <tr>
-                <td>008</td>
-                <td>Fernando Oliveira</td>
-                <td>Dor de cabeça crônica</td>
-                <td>Analgésico</td>
-                <td>Neurologia</td>
-                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
-            </tr>
-            <tr>
-                <td>009</td>
-                <td>Roberto Alves</td>
-                <td>Diabetes</td>
-                <td>Insulina</td>
-                <td>Endocrinologia</td>
-                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
-            </tr>
-            <tr>
-                <td>010</td>
-                <td>Sofia Lima</td>
-                <td>Depressão</td>
-                <td>Antidepressivo</td>
-                <td>Psiquiatria</td>
-                <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td>
-            </tr>
-
-
+            <!-- <td><button class="fas fa-book-medical btn-prontuario" onclick="abrirProntuario(1)"></button></td> -->
         </tbody>
     </table>
 </section>
 <!-- Fim da seção da tabela de dados -->
 
-<!-- Seção do prontuário -->
+Seção do prontuário
 <div id="prontuarioModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="fecharProntuario()">&times;</span>
@@ -114,88 +33,79 @@
 </div>
 <!-- Fim da seção do prontuário -->
 <script>
-    // Função para abrir o prontuário
-    function abrirProntuario(consultaId) {
-        // falta criar lógica para carregar os dados do prontuário com base no ID da consulta
-        var prontuarioContent = document.getElementById("prontuarioContent");
-        prontuarioContent.innerHTML = "<p>Conteúdo do prontuário para a consulta ID " + consultaId + "</p>";
 
-        // Exibe o modal do prontuário
-        var prontuarioModal = document.getElementById("prontuarioModal");
-        prontuarioModal.style.display = "block";
+    const dataUser = JSON.parse(sessionStorage.getItem('userData'))
+    const token = dataUser.token
+
+    const funcionarioId = dataUser.moreInfos.pessId
+
+
+    fetch('/ConsultasMedico', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: token,
+      idfuncionario:funcionarioId
     }
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.result === false) {
+        alert("não foi possivel retornar as especializações disponiveis para registro erro:", data.cadastroMessage)
+        return
+      } else if (data.auth === false) {
+        alert('usuario deslogado, logue novamente para continuar')
+        window.location = '/login'
+      }
 
-    // Função para fechar o prontuário
-    function fecharProntuario() {
-        // Oculta o modal do prontuário
-        var prontuarioModal = document.getElementById("prontuarioModal");
-        prontuarioModal.style.display = "none";
-    }
+      const tableReceiver = document.getElementById('corpo-tabela-dados')
 
-    // Função para simular a obtenção dos dados da consulta
-    function obterDadosConsulta() {
-        var dados = [
-            { id: 1, nomePaciente: "João da Silva", diagnostico: "Gripe", medicacao: "Paracetamol", especialidade: "Clínico Geral" },
-            { id: 2, nomePaciente: "Maria Oliveira", diagnostico: "Dermatite", medicacao: "Creme hidratante", especialidade: "Dermatologia" },
-            { id: 3, nomePaciente: "Carlos Souza", diagnostico: "Fratura no braço", medicacao: "Gesso", especialidade: "Ortopedia" }
-            // Adicione mais dados conforme necessário
-        ];
+      data.moreInfos.forEach(e => {
+        const linha = document.createElement('tr')
+        const colunaId = document.createElement('td')
+        colunaId.innerText = `${e.idConsulta}`
+        const colunaPacienteNome = document.createElement('td')
+        colunaPacienteNome.innerText = `${e.dadosPaciente.nomePaciente}`
+        const colunaCpf = document.createElement('td')
+        colunaCpf.innerText = `${e.dadosPaciente.cpfPaciente}`
+        const colunaDataConsulta = document.createElement('td')
+        colunaDataConsulta.innerText = `${e.dataConsulta}`
+        const colunaHoraConsulta = document.createElement('td')
+        colunaHoraConsulta.innerText = `${e.horaConsulta}`
+  
 
-        // Limpa o conteúdo atual da tabela
-        var corpoTabela = document.getElementById("corpo-tabela-dados");
-        corpoTabela.innerHTML = "";
+        linha.append(colunaId, colunaPacienteNome, colunaCpf,colunaDataConsulta ,colunaHoraConsulta)
+        tableReceiver.appendChild(linha)
 
-        // Itera sobre os dados e os insere na tabela
-        for (var i = 0; i < dados.length; i++) {
-            var consulta = dados[i];
-            var newRow = "<tr>" +
-                "<td>" + consulta.id + "</td>" +
-                "<td>" + consulta.nomePaciente + "</td>" +
-                "<td>" + consulta.diagnostico + "</td>" +
-                "<td>" + consulta.medicacao + "</td>" +
-                "<td>" + consulta.especialidade + "</td>" +
-                "<td><button class='fas fa-book-medical btn-prontuario' onclick='abrirProntuario(" + consulta.id + ")'></button></td>" +
-                "</tr>";
-            corpoTabela.innerHTML += newRow;
-        }
-    }
+      })
 
-    // Simula a obtenção dos dados da consulta após o carregamento da página
-    obterDadosConsulta();
+    })
+    .catch(error => {
+      console.log('erro')
+      console.error('Erro:', error);
+    });
+
+
 </script>
 
 <!-- Inicio da função de enviar informações do formulario -->
+<!-- 
+function abrirProntuario(consultaId) {
+  // falta criar lógica para carregar os dados do prontuário com base no ID da consulta
+  var prontuarioContent = document.getElementById("prontuarioContent");
+  prontuarioContent.innerHTML = "<p>Conteúdo do prontuário para a consulta ID " + consultaId + "</p>";
 
-<!-- <script>
-    // Função para carregar os dados da consulta do servidor
-    function carregarDadosConsulta() {
-        fetch('/consultas')
-            .then(response => response.json())
-            .then(data => {
-                // Limpa o conteúdo atual da tabela
-                var corpoTabela = document.getElementById("corpo-tabela-dados");
-                corpoTabela.innerHTML = "";
+  // Exibe o modal do prontuário
+  var prontuarioModal = document.getElementById("prontuarioModal");
+  prontuarioModal.style.display = "block";
+}
 
-                // Itera sobre os dados e os insere na tabela
-                data.forEach(consulta => {
-                    var newRow = "<tr>" +
-                                    "<td>" + consulta.id + "</td>" +
-                                    "<td>" + consulta.nomePaciente + "</td>" +
-                                    "<td>" + consulta.diagnostico + "</td>" +
-                                    "<td>" + consulta.medicacao + "</td>" +
-                                    "<td>" + consulta.especialidade + "</td>" +
-                                    "<td><button class='fas fa-book-medical btn-prontuario' onclick='abrirProntuario(" + consulta.id + ")'></button></td>" +
-                                "</tr>";
-                    corpoTabela.innerHTML += newRow;
-                });
-            })
-            .catch(error => console.error('Erro ao carregar os dados da consulta:', error));
-    }
-
-    // Carrega os dados da consulta automaticamente após o carregamento da página
-    window.onload = carregarDadosConsulta;
-</script> -->
-
+// Função para fechar o prontuário
+function fecharProntuario() {
+  // Oculta o modal do prontuário
+  var prontuarioModal = document.getElementById("prontuarioModal");
+  prontuarioModal.style.display = "none";
+} -->
 <!-- Fim da função de enviar informações do formulario -->
 
 

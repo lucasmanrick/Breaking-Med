@@ -114,11 +114,16 @@ const QuerieConsulta = {
 
   retornaConsultaDeMedicoLogado: async (pessoaObj) => {
     const conn = await connection();
+    let returnMessage;
+
       try {
         const pegaConsultasDoMedico = await conn.query('select id as idConsulta,data as dataConsulta,hora as horaConsulta,status as statusConsulta,paciente_id,paciente_pessoa_id,funcionario_id,funcionario_pessoa_id,especialidade_id from tbl_consulta where funcionario_pessoa_id=? and status=1', [pessoaObj.id]);
         if(pegaConsultasDoMedico[0].length === 0) {
           return {consultaMessage:'o Médico não possui consultas pendentes ou não foi possivel retornar os dados no momento, por favor tente novamente!', result:false}
         }else {
+          returnMessage = { consultaMessage: 'O Paciente tem consultas pendentes', result: true };
+          returnMessage.moreInfos = pegaConsultasDoMedico[0];
+          console.log('entrou 2')
           const promessasConsultas = returnMessage.moreInfos.map(async (el) => {
             el.status = 'ativo';
             const pegaNomeMedicoEEspecialidade = await conn.query('select p.nome as nomePaciente, p.cpf as cpfPaciente,c.data as dataConsulta,c.hora as horaConsulta, c.status as statusConsulta from tbl_pessoa as p join tbl_paciente as pac on pac.pessoa_id=p.id join tbl_consulta as c on pac.pessoa_id=c.id ');
@@ -136,6 +141,10 @@ const QuerieConsulta = {
             delete el.paciente_pessoa_id;
             return el;
           });  
+          returnMessage.moreInfos = await Promise.all(promessasConsultas);
+          console.log('entrou 3')
+          return returnMessage;
+          
         }
       }catch(e) {
         console.log(e)
