@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="../../../public/css/header.css">
 
-<header class="header">
+<header class="header" id="header">
 
-  <a href="#" class="logo">
+  <a href="#" class="logo" id="logo-name-container" style="display: flex; width: 20%; justify-content: space-evenly;">
     <img src="../../../public/img/imgLogo1.jpg" alt="logo">
   </a>
 
@@ -25,8 +25,6 @@
     const dataUser = JSON.parse(sessionStorage.getItem('userData'))
     const navbar = document.getElementById('headerNavBar')
     if (dataUser.moreInfos.tipo === 'administrador') {
-
-
 
       const newUserBtn = document.createElement('a')
       newUserBtn.setAttribute('id', 'registerUser')
@@ -63,8 +61,12 @@
       newUserBtn.innerText = `Verificar minhas Consultas`
       newUserBtn.href = '/ConsultaMedicoPage'
 
-
       navbar.append(newUserBtn)
+    }
+
+
+    if(dataUser.moreInfos.tipo === 'medico' || dataUser.moreInfos.tipo === 'paciente' || dataUser.moreInfos.tipo === 'administrador') {
+      document.getElementById('logo-name-container').innerHTML = `${dataUser.moreInfo.nomeUsuario}`
     }
 
   } else {
