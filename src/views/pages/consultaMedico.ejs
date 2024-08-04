@@ -93,10 +93,10 @@
         
 
 
-        createProntRegister.addEventListener("click", () => {
-          document.getElementById('input-medication').value = ""
-          document.getElementById('input-description').value = ""
-          abrirProntuario(e)
+        createProntRegister.addEventListener("click",async () => {
+           document.getElementById('input-medication').value = ""
+           document.getElementById('input-description').value = ""
+          await abrirProntuario(e)
 
         })
 
@@ -113,9 +113,9 @@
     });
 
 
-  function abrirProntuario(consultaAndPront) {
+  async function abrirProntuario(consultaAndPront) {
 
-    console.log(consultaAndPront, "first validation")
+    console.log(consultaAndPront.dadosProntuario)
 
     try {
        // falta criar lógica para carregar os dados do prontuário com base no ID da consulta
@@ -130,7 +130,7 @@
       document.getElementById('input-description').value = `${consultaAndPront.dadosProntuario.diagnostico}`
     }
     else {
-      console.log(consultaAndPront, "false")
+
       console.log("false")
     }
 
@@ -144,7 +144,8 @@
       console.log(e)
     }
 
-   
+    // document.getElementById("sendAttPront").removeEventListener("click")
+
 
     document.getElementById("sendAttPront").addEventListener("click", async() => {
       try {
@@ -175,6 +176,9 @@
 
 
    function  enviaAtualizacaoProntuario (idProntuario) {
+    alert("enviando update prontuario " + idProntuario)
+
+
     fetch('/Prontuario', {
       method: 'PUT',
       headers: {
