@@ -8,13 +8,14 @@ const redirecionamentoControllers = require('../controllers/redirecionamento')
 
 function verifyJWT(req, res, next){
     const token = req.headers['authorization'];
+
     if (!token) return res.status(401).json({ auth: false, message: 'No token provided.' });
     
     jwt.verify(token, process.env.SECRET, function(err, decoded) {
-      if (err) return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
+      if (err) return res.status(500).json({ auth: false, message: 'Token invalido para o acesso a Rota!.' });
       
       // se tudo estiver ok, salva no request para uso posterior
-      req.userId = decoded.id;
+      req.userId = decoded.pessId;
       next();
     });
 }
@@ -23,6 +24,7 @@ function verifyJWT(req, res, next){
 
 function verifyJWTMedico(req, res, next){
   const token = req.headers['authorization'];
+  console.log(token, "token recebido no header")
   if (!token) return res.status(401).json({ auth: false, message: 'No token provided.' });
   
   jwt.verify(token, process.env.MEDIC, function(err, decoded) {
@@ -51,7 +53,7 @@ function verifyJWTPaciente(req, res, next){
 
 // rotas para registrar novo Usuario - ADM
 router.get('/RegisterPage', redirecionamentoControllers.direcionamentoCadastroUsuario)
-router.get('/RegistroUsuario',verifyJWT, pessoaControllers.retornaTodasEspecialidades) //retorna todas especialidades para o adminsitrador registrar um novo usuario
+router.get('/RegistroUsuario',verifyJWT, pessoaControllers.retornaTodasEspecialidades) //retorna todas especialidades para o administrador registrar um novo usuario
 router.post('/RegistroUsuario',verifyJWT ,pessoaControllers.registroDeUsuario) //registra um novo usuario se tiver o token ou seja se tiver permissao de adm
 
 
@@ -67,13 +69,18 @@ router.get('/CancelaConsultaPage', redirecionamentoControllers.direcionamentoCan
 router.get('/Consulta',verifyJWT, consultaController.retornaTodasConsultas) //abre pagina e retorna todas as consultas ativas para posteriormente conseguirmos desfazer o agendamento.
 router.put('/Consulta',verifyJWT,consultaController.cancelaConsulta)//para cancelar um agendamento.
 
+//rotas para edição de dados de paciente-ADM
 
-//updateDeProntuario 
+// router.get('/EditaInformaçõesPaciente', redirecionamentoControllers.direcionaEdicaoPacientes) // redirecionamento para pagina de edição de pacientes
+router.get('/RetornaTodosPacientes',verifyJWT, pessoaControllers.retornaTodosPacientes) // retorna todos pacientes cadastrados
+router.put('/EditaDadosPaciente',verifyJWT, pessoaControllers.editaDadosPacientes) // edita dados paciente.
 
+
+//updateDeProntuario-Medico
 router.put('/Prontuario', verifyJWTMedico, consultaController.preencheProntuario) //atualiza dados no prontuario
 
 
-// pagina de visualização de consulta de medico
+// pagina de visualização de consulta de medico - Medico
 router.get('/ConsultaMedicoPage', redirecionamentoControllers.direcionamentoConsultasMedicas)
 router.get('/ConsultasMedico',verifyJWTMedico,consultaController.verificaConsultasMedico)
 

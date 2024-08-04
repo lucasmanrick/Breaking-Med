@@ -59,7 +59,7 @@ const QuerieConsulta = {
       }
 
       const cRes = await conn.query('insert into tbl_consulta (data,hora,status,paciente_id,paciente_pessoa_id,funcionario_id,funcionario_pessoa_id,especialidade_id) VALUES (?,?,?,?,?,?,?,?)', [consultaObj.dataConsulta, consultaObj.horaConsulta, consultaObj.statusConsulta, consultaObj.pacienteId, consultaObj.pacientePessoaId, consultaObj.funcionarioId, consultaObj.funcionarioPessoaId, consultaObj.especialidadeId])
-      console.log(cRes[0].affectedRows === 1)
+
       if (cRes[0].affectedRows === 1) {
         const pacientName = await conn.query('select nome from tbl_pessoa where id=?', [consultaObj.pacientePessoaId])
         const doctorName = await conn.query('select nome from tbl_pessoa where id=?', [consultaObj.funcionarioPessoaId])
@@ -77,9 +77,9 @@ const QuerieConsulta = {
   },
 
   retornaConsultaDePacienteLogado: async (pessoaObj) => {
-    console.log('não conectou')
+
     const conn = await connection();
-    console.log('conectou')
+
     let returnMessage;
     try {
       const pegaConsultasDoPaciente = await conn.query('select id as idConsulta,data as dataConsulta,hora as horaConsulta,status as statusConsulta,paciente_id,paciente_pessoa_id,funcionario_id,funcionario_pessoa_id,especialidade_id from tbl_consulta where paciente_pessoa_id=? and status=1', [pessoaObj.id]);
@@ -121,12 +121,12 @@ const QuerieConsulta = {
         if(pegaConsultasDoMedico[0].length === 0) {
           return {consultaMessage:'o Médico não possui consultas pendentes ou não foi possivel retornar os dados no momento, por favor tente novamente!', result:false}
         }else {
-          returnMessage = { consultaMessage: 'O Paciente tem consultas pendentes', result: true };
+          returnMessage = { consultaMessage: 'O Medico tem consultas pendentes', result: true };
           returnMessage.moreInfos = pegaConsultasDoMedico[0];
-          console.log('entrou 2')
+
           const promessasConsultas = returnMessage.moreInfos.map(async (el) => {
             el.status = 'ativo';
-            const pegaNomeMedicoEEspecialidade = await conn.query('select p.nome as nomePaciente, p.cpf as cpfPaciente,c.data as dataConsulta,c.hora as horaConsulta, c.status as statusConsulta from tbl_pessoa as p join tbl_paciente as pac on pac.pessoa_id=p.id join tbl_consulta as c on pac.pessoa_id=c.id ');
+            const pegaNomeMedicoEEspecialidade = await conn.query('select id as idDoPaciente, nome as nomeDoPaciente, data_nasc as dataDeNascimento, email as emailDoPaciente, cpf from tbl_pessoa Where id=?', [el.paciente_pessoa_id]);
             const pegaProntuarioConsulta = await conn.query('select id as idPront,medicacao,diagnostico from tbl_prontuario where consulta_id=?',[el.idConsulta])
             el.dadosPaciente = pegaNomeMedicoEEspecialidade[0][0];
             el.dadosPaciente.funcionario_id = el.funcionario_id
@@ -142,7 +142,7 @@ const QuerieConsulta = {
             return el;
           });  
           returnMessage.moreInfos = await Promise.all(promessasConsultas);
-          console.log('entrou 3')
+          console.log(returnMessage, "esses dados são as consultas pendentes do medico logado.")
           return returnMessage;
           
         }
@@ -155,7 +155,7 @@ const QuerieConsulta = {
     const conn = await connection();
 
     const consultaASerCancelada = await conn.query('Update tbl_consulta set status=0 WHERE ID=?', [idConsulta])
-    console.log(consultaASerCancelada)
+
 
     if (consultaASerCancelada[0].affectedRows === 1) {
       return { consultaMessage: `o Agendamento de ID ${idConsulta} foi cancelado`, result: true }
@@ -169,11 +169,11 @@ const QuerieConsulta = {
     try{
       let returnUpdateStatment;
       if(prontObj.diagnostico !== '' && prontObj.medicacao !== '') {
-        returnUpdateStatment = await conn.query('UPDATE tbl_prontuario set diagnostico=? AND medicacao=? WHERE id=?',[prontObj.diagnostico,prontObj.medicacao,prontObj.id])
+        returnUpdateStatment = await conn.query('UPDATE tbl_prontuario set diagnostico=? , medicacao=? WHERE id=?',[prontObj.diagnostico,prontObj.medicacao,prontObj.id])
       }else if (prontObj.diagnostico !== '' && prontObj.medicacao == '') {
-        returnUpdateStatment = await conn.query('UPDATE tbl_prontuario SET diagnostico=? WHERE ID=?',[prontObj.diagnostico, prontObj.id])
+        returnUpdateStatment = await conn.query('UPDATE tbl_prontuario SET diagnostico=? WHERE id=?',[prontObj.diagnostico, prontObj.id])
       }else if (prontObj.diagnostico === '' && prontObj.medicacao !== '') {
-        returnUpdateStatment = await conn.query('UPDATE tbl_prontuario SET medicacao=? WHERE ID=?',[prontObj.medicacao, prontObj.id])
+        returnUpdateStatment = await conn.query('UPDATE tbl_prontuario SET medicacao=? WHERE id=?',[prontObj.medicacao, prontObj.id])
       }
       if(returnUpdateStatment) {
         return {prontuarioMessage:'dados alterados com sucesso', result:true}

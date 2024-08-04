@@ -1,16 +1,16 @@
-<link rel="stylesheet" href="../../../public/css/header.css">
+<link rel="stylesheet" href="/css/header.css">
 
 <header class="header" id="header">
 
   <a href="#" class="logo" id="logo-name-container" style="display: flex; width: 20%; justify-content: space-evenly;">
-    <img src="../../../public/img/imgLogo1.jpg" alt="logo">
+    <img src="/img/imgLogo1-removebg-preview.png" alt="logo">
   </a>
 
   <nav class="navbar" id="headerNavBar">
 
   </nav>
 
-  <div class="icons">
+  <div class="icons" id="iconLogger">
     <div class="fas fa-sign-out-alt" id="search-btn"></div>
   </div>
 
@@ -19,6 +19,15 @@
 </header>
 
 <script>
+
+document.getElementById("iconLogger").addEventListener("click",() => {
+    console.log("clicou")
+    sessionStorage.clear()
+
+    window.location="/"
+  } )
+
+
 
   if (sessionStorage.getItem('userData') !== null) {
   
@@ -64,17 +73,9 @@
       navbar.append(newUserBtn)
     }
 
-
-    if(dataUser.moreInfos.tipo === 'medico' || dataUser.moreInfos.tipo === 'paciente' || dataUser.moreInfos.tipo === 'administrador') {
-      document.getElementById('logo-name-container').innerHTML = `${dataUser.moreInfo.nomeUsuario}`
-    }
-
   } else {
     const navbar = document.getElementById('headerNavBar')
     navbar.innerHTML = ''
-    navbar.innerHTML = `<a href="/home">Início</a>
-    <a href="/sobre">Sobre nós</a>
-    <a href="/especialidades">Especialidades</a>
-    <a href="/login" id="telaLogin">Login</a>`
+    navbar.innerHTML = `<a href="/login" id="telaLogin">Login</a>`
   }
 </script>

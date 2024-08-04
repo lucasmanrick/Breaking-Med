@@ -1,33 +1,59 @@
 <link rel="stylesheet" href="/css/telaLogin.css">
 
-<div class="container">
-  <form id="sendForm" class="forms-container" method="post" action="">
+<body>
 
-    <h3>Seja Bem-vindo!</h3>
 
-    <div class="containers-inputs">
-      <div class="input-container">
-        <input name="login" placeholder="CPF" type="text" required id="login">
-        <i class="fas fa-user"></i>
+  <section class="login-section">
+    <div class="container">
+      <div class="image-container">
+        <img src="/img/imgLogo1.jpg" alt="Imagem de Login">
       </div>
+      <form id="sendForm" class="forms-container" method="post" action="">
+        <h3>Seja Bem-vindo!</h3>
+        <div class="containers-inputs">
+          <div class="input-container">
+            <input name="login" placeholder="CPF" type="text" required id="login">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="senha-container">
+            <input name="senha" placeholder="Senha" type="password" required id="senha">
+            <i class="fas fa-key"></i>
+          </div>
+          <a href="#" id="esqueciminhasenha">Esqueci minha senha</a>
+        </div>
+        <input id="submitButton" type="submit" class="submit-button" title="Enviar"></input>
+        <div class="register-link">
+          <p>Não está cadastrado? <a href="#">Cadastre-se</a></p>
+        </div>
 
-      <div class="senha-container">
-        <input name="senha" placeholder="Senha" type="password" required id="senha">
-        <i class="fas fa-key"></i>
-      </div>
+        <div class="redirect-buttons">
+          <button>
+            <svg viewBox="0 0 16 16" class="bi bi-facebook" fill="currentColor" height="16" width="16"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z">
+              </path>
+            </svg>
+            <span>conect with Facebook</span>
+          </button>
 
-      <a href="#" id="esqueciminhasenha">Esqueci minha senha</a>
+          <button>
+            <svg viewBox="0 0 16 16" class="bi bi-facebook" fill="currentColor" height="16" width="16"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z">
+              </path>
+            </svg>
+            <span>conect with google</span>
+          </button>
+
+        </div>
+      </form>
     </div>
+  </section>
+</body>
 
 
-    <input id="submitButton" type="submit" class="submit-button" title="Enviar"></input>
-
-    <div class="register-link">
-      <p>Não está cadastrado ? <a href="#">Cadastre-se</a> </p>
-    </div>
-
-  </form>
-</div>
 
 
 <script defer>
@@ -54,21 +80,34 @@
     })
       .then(response => response.json())
       .then(data => {
-        if(sessionStorage.getItem("userData")) {
-          sessionStorage.setItem('userData','')
+        if (sessionStorage.getItem("userData")) {
+          sessionStorage.setItem('userData', '')
         }
         if (data.result === false) {
           alert(data.loginMessage)
           return
         }
-        sessionStorage.setItem("userData",JSON.stringify(data));
+        sessionStorage.setItem("userData", JSON.stringify(data));
         console.log('data user', sessionStorage.getItem('userData'))
         window.location = data.redirect;
       })
-    .catch (error => {
-      // Lidar com o erro
-      console.error('Erro:', error);
+      .catch(error => {
+        // Lidar com o erro
+        console.error('Erro:', error);
+      });
+  })
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const elements = document.querySelectorAll('.input-container, .senha-container, .submit-button, .redirect-buttons a');
+
+    elements.forEach((element, index) => {
+      setTimeout(() => {
+        element.style.opacity = 1;
+        element.style.transform = 'translateY(0)';
+      }, index * 300);
     });
-})
+  });
+
 
 </script>
